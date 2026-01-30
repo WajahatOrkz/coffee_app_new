@@ -258,6 +258,7 @@ class _SocialButton extends StatelessWidget {
         border: Border.all(color: Colors.grey[300]!),
         borderRadius: BorderRadius.circular(12),
       ),
+      // putting icon button inside container
       child: IconButton(
         icon: Icon(icon, size: 24, color: Colors.white),
         onPressed: onPressed,
