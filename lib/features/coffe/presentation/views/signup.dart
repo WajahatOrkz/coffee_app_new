@@ -73,15 +73,7 @@ class SignUpView extends GetView<RegisterController> {
                         label: 'Name',
                         hintText: 'Ahmed khan',
                         controller: controller.nameController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your name';
-                          }
-                          if (value.length < 3) {
-                            return 'Name must be at least 3 characters';
-                          }
-                          return null;
-                        },
+                        validator: controller.validateName,
                       ),
                       const SizedBox(height: 20),
 
@@ -91,15 +83,7 @@ class SignUpView extends GetView<RegisterController> {
                         hintText: 'ali@gmail.com',
                         controller: controller.emailController,
                         keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          if (!GetUtils.isEmail(value)) {
-                            return 'Please enter a valid email';
-                          }
-                          return null;
-                        },
+                        validator:controller.validateEmail,
                       ),
                       const SizedBox(height: 20),
 
@@ -119,15 +103,7 @@ class SignUpView extends GetView<RegisterController> {
                             ),
                             onPressed: controller.togglePasswordVisibility,
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
-                            }
-                            if (value.length < 6) {
-                              return 'Password must be at least 6 characters';
-                            }
-                            return null;
-                          },
+                          validator: controller.validatePassword,
                         ),
                       ),
                       const SizedBox(height: 16),

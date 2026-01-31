@@ -1,3 +1,4 @@
+import 'package:coffee_app/core/validation/validations.dart';
 import 'package:coffee_app/features/coffe/domain/repositories/auth_repositories.dart';
 import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +23,20 @@ class LoginController extends GetxController {
 
   bool togglePasswordVisibility() {
     return isPasswordVisible.value = !isPasswordVisible.value;
-    
   }
 
   void toggleRememberMe() {
     rememberMe.value = !rememberMe.value;
+  }
+
+   // Email validator
+  String? validateEmail(String? value) {
+    return Validators.validateEmail(value);
+  }
+
+  // Password validator for login (simple validation)
+  String? validatePassword(String? value) {
+    return Validators.validateLoginPassword(value);
   }
 
   Future<void> login() async {

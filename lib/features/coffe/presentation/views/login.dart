@@ -75,15 +75,7 @@ class LoginView extends GetView<LoginController> {
                         hintText: 'ali@gmail.com',
                         controller: controller.emailController,
                         keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          if (!GetUtils.isEmail(value)) {
-                            return 'Please enter a valid email';
-                          }
-                          return null;
-                        },
+                        validator:controller.validateEmail,
                       ),
                       const SizedBox(height: 20),
                   
@@ -103,15 +95,7 @@ class LoginView extends GetView<LoginController> {
                             ),
                             onPressed: controller.togglePasswordVisibility,
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
-                            }
-                            if (value.length < 6) {
-                              return 'Password must be at least 6 characters';
-                            }
-                            return null;
-                          },
+                          validator: controller.validatePassword,
                         ),
                       ),
                       const SizedBox(height: 12),

@@ -1,4 +1,5 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
+import 'package:coffee_app/core/validation/validations.dart';
 import 'package:coffee_app/features/coffe/domain/repositories/auth_repositories.dart';
 import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,31 @@ class RegisterController extends GetxController {
   void toggleTerms() {
     agreeToTerms.value = !agreeToTerms.value;
   }
+
+ // Name validator
+  String? validateName(String? value) {
+    return Validators.validateName(value);
+  }
+
+  // Email validator
+  String? validateEmail(String? value) {
+    return Validators.validateEmail(value);
+  }
+
+  // Strong password validator for signup
+  String? validatePassword(String? value) {
+    return Validators.validateSignupPassword(value);
+  }
+
+  // Confirm password validator
+  // String? validateConfirmPassword(String? value) {
+  //   return Validators.validateConfirmPassword(
+  //     value,
+  //     passwordController.text,
+  //   );
+  // }
+
+
  Future<void> register() async {
     // Validate form
     if (!signUpFormKey.currentState!.validate()) {
@@ -38,7 +64,7 @@ class RegisterController extends GetxController {
 
     if (!agreeToTerms.value) {
       Get.snackbar(
-        'Error',
+        'Terms Required',
         'Please agree to Terms of Service',
         backgroundColor: Colors.red,
         colorText: Colors.white,

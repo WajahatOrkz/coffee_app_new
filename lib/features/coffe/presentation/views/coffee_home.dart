@@ -3,7 +3,7 @@ import 'package:coffee_app/features/coffe/presentation/widgets/coffee_card.dart'
 import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
+
 
 import '../controllers/coffee_controller.dart';
 
