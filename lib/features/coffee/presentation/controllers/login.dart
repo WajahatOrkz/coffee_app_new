@@ -1,5 +1,5 @@
 import 'package:coffee_app/core/validation/validations.dart';
-import 'package:coffee_app/features/coffe/domain/repositories/auth_repositories.dart';
+import 'package:coffee_app/features/coffee/domain/repositories/auth_repositories.dart';
 import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,12 +29,12 @@ class LoginController extends GetxController {
     rememberMe.value = !rememberMe.value;
   }
 
-   // Email validator
+   
   String? validateEmail(String? value) {
     return Validators.validateEmail(value);
   }
 
-  // Password validator for login (simple validation)
+  
   String? validatePassword(String? value) {
     return Validators.validateLoginPassword(value);
   }
@@ -71,13 +71,12 @@ class LoginController extends GetxController {
         isLoading.value = false;
       }
     } else {
-      // Agar validation fail hui to yahan kuch karne ki zaroorat nahi, 
-      // TextFormField khud error dikha dega.
+    
       print("Form Validation Failed");
     }
   }
 
-  // 
+  
 
   @override
   void onClose() {

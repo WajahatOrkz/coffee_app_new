@@ -1,4 +1,4 @@
-import 'package:coffee_app/features/coffe/domain/entities/user_entity.dart';
+import 'package:coffee_app/features/coffee/domain/entities/user_entity.dart';
 
 class User {
   final String id;

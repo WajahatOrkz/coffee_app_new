@@ -1,5 +1,5 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
-import 'package:coffee_app/features/coffe/domain/repositories/coffee_repositories.dart';
+import 'package:coffee_app/features/coffee/domain/repositories/coffee_repositories.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -79,9 +79,9 @@ class CoffeeController extends GetxController {
           allCoffeeList; // Agar search empty hai to original list show krna hai wo yahan ho raha
     } else {
       searchedCoffeeList.value = allCoffeeList.where((eachItem) {
-        // Search query ke basis pe filter karna yahan se start ho raha
-        final nameLower = eachItem.name.toLowerCase();
-        // final subtitleLower = eachItem.subtitle.toLowerCase();
+        
+        final nameLower = eachItem.name.toLowerCase();  // Search query ke basis pe filter karna yahan se start ho raha
+       
         final queryLower = query.toLowerCase();
 
         return nameLower.contains(queryLower);
@@ -130,13 +130,12 @@ class CoffeeController extends GetxController {
     // Check if item already exists in cart
     final existingIndex = cartItems.indexWhere(
       (item) => item.id == coffee.id,
-    ); // Check krna hai item already exist kr raha hai ya nahi?
+    ); // Check krna hai item already exist kr raha hai cart main ya nahi?
 
     if (existingIndex != -1) {
-      // Item already exists - increase quantity
       cartQuantities[coffee.id] =
           (cartQuantities[coffee.id] ?? 1) +
-          1; // check kr raha hai k Item already exists kr raha hai - increase quantity
+          1; // check kr raha hai k Item already exists kr raha hai agr kr raha hai to - increase quantity
 
       Get.snackbar(
         'Updated Cart',

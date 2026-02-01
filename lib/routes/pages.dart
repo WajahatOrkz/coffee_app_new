@@ -1,9 +1,9 @@
-import 'package:coffee_app/features/coffe/presentation/bindings/auth_binding.dart';
-import 'package:coffee_app/features/coffe/presentation/bindings/coffee_binding.dart';
-import 'package:coffee_app/features/coffe/presentation/views/cart.dart';
-import 'package:coffee_app/features/coffe/presentation/views/coffee_home.dart';
-import 'package:coffee_app/features/coffe/presentation/views/login.dart';
-import 'package:coffee_app/features/coffe/presentation/views/signup.dart';
+import 'package:coffee_app/features/coffee/presentation/bindings/auth_binding.dart';
+import 'package:coffee_app/features/coffee/presentation/bindings/coffee_binding.dart';
+import 'package:coffee_app/features/coffee/presentation/views/cart.dart';
+import 'package:coffee_app/features/coffee/presentation/views/coffee_home.dart';
+import 'package:coffee_app/features/coffee/presentation/views/login.dart';
+import 'package:coffee_app/features/coffee/presentation/views/signup.dart';
 import 'package:coffee_app/routes/routes.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';

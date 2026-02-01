@@ -1,6 +1,6 @@
 
 
-import 'package:coffee_app/features/coffe/domain/repositories/coffee_repositories.dart';
+import 'package:coffee_app/features/coffee/domain/repositories/coffee_repositories.dart';
 
 import '../../domain/entities/coffee_entity.dart';
 

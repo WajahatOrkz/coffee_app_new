@@ -1,4 +1,4 @@
-import 'package:coffee_app/features/coffe/domain/repositories/auth_repositories.dart';
+import 'package:coffee_app/features/coffee/domain/repositories/auth_repositories.dart';
 
 import '../../domain/entities/user_entity.dart';
 

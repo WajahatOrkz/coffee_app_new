@@ -1,5 +1,5 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
-import 'package:coffee_app/features/coffe/presentation/widgets/coffee_card.dart';
+import 'package:coffee_app/features/coffee/presentation/widgets/coffee_card.dart';
 import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -103,6 +103,8 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                   prefixIcon: Icon(Icons.search, color: Colors.grey),
                   suffixIcon: GestureDetector(
                     onTap: () {
+                     
+                      // FocusManager.instance.primaryFocus!.unfocus();//ye jab user textfield main icon pe click kren or icon pe click krne k bd bottom sheet khulti jab us main bagher kuch behave kiye wapis aye to keyboard khula nahi rehta
                       Get.bottomSheet(
                         Container(
                           width: double.infinity,
@@ -140,7 +142,10 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                                   style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.white)),
                                   onPressed: () {
                                     controller.applyFilters();
+                                   
                                     Get.back();
+                                    // Future.delayed(Duration(microseconds: 100));
+                                    FocusManager.instance.primaryFocus!.unfocus(); //bottomsheet bnd hone k bd keyboard disappear yahan se hota
                                   },
  
                                  
