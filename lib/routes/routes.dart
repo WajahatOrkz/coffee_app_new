@@ -3,4 +3,5 @@ class AppRoutes{
    static const kLoginRoute="/login";
   static const kHomeCoffeeRoute="/coffee_home";
   static const kCartRoute="/cartview";
+  static const kSplashRoute="/splash";
 }

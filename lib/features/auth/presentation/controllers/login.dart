@@ -38,7 +38,8 @@ class LoginController extends GetxController {
   String? validatePassword(String? value) {
     return Validators.validateLoginPassword(value);
   }
-
+ 
+//  login function yahan hai
   Future<void> login() async {
     
     if (logInFormKey.currentState!.validate()) {
@@ -49,7 +50,11 @@ class LoginController extends GetxController {
           emailController.text.trim(),
           passwordController.text,
         );
-
+        // Ye print karke dekho
+print('Full User Entity: $userEntity');
+print('User Name: ${userEntity.name}');
+print('User Email: ${userEntity.email}');
+       ;
         Get.snackbar(
           'Success',
           'Welcome ${userEntity.name}!',
@@ -76,12 +81,19 @@ class LoginController extends GetxController {
     }
   }
 
-  
+  Future<void> logout()async{
+   await repository.logout();
+  }
+
+
+
 
   @override
   void onClose() {
+    super.onClose();
+    print("onclosen");
     emailController.dispose();
     passwordController.dispose();
-    super.onClose();
+   
   }
 }

@@ -1,3 +1,4 @@
+import 'package:coffee_app/features/auth/presentation/controllers/logout.dart';
 import 'package:coffee_app/features/coffee/data/respositories/coffee_repositories.dart';
 
 import 'package:coffee_app/features/coffee/domain/repositories/coffee_repositories.dart';
@@ -14,5 +15,6 @@ class CoffeeBinding extends Bindings {
     
     // Controller inject
     Get.lazyPut(() => CoffeeController(Get.find<CoffeeRepository>()));
+    Get.lazyPut(()=> LogoutController());
   }
 }

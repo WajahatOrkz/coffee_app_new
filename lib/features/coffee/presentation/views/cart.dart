@@ -1,7 +1,9 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
+import 'package:coffee_app/features/coffee/presentation/controllers/coffee_controller.dart';
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
-import '../controllers/coffee_controller.dart';
+
 
 class CartScreen extends GetView<CoffeeController> {
   @override

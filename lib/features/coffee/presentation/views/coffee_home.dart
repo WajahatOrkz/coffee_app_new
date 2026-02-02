@@ -1,15 +1,22 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
+import 'package:coffee_app/features/auth/presentation/controllers/logout.dart';
+import 'package:coffee_app/features/coffee/domain/repositories/auth_repositories.dart';
+
+import 'package:coffee_app/features/coffee/presentation/controllers/coffee_controller.dart';
 import 'package:coffee_app/features/coffee/presentation/widgets/coffee_card.dart';
 import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-import '../controllers/coffee_controller.dart';
+
 
 class CoffeeHomeView extends GetView<CoffeeController> {
+
   @override
   Widget build(BuildContext context) {
+    final logOutController= Get.put(LogoutController());
+    Get.put(AuthRepository);
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -28,7 +35,7 @@ class CoffeeHomeView extends GetView<CoffeeController> {
           actions: [
             Icon(Icons.notifications_outlined, color: Colors.white),
             SizedBox(width: 16),
-            
+                
             // Cart Icon with Badge
             Obx(() {
               return Stack(
@@ -75,7 +82,14 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                     ),
                 ],
               );
-            })]),
+            }),
+            IconButton(onPressed: () {
+              logOutController.logout();
+              Get.toNamed(AppRoutes.kLoginRoute);
+            },
+            icon: Icon(Icons.logout),),
+            SizedBox(width: 10,)
+            ]),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -102,9 +116,8 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                   hintStyle: TextStyle(color: Colors.grey),
                   prefixIcon: Icon(Icons.search, color: Colors.grey),
                   suffixIcon: GestureDetector(
-                    onTap: () {
-                     
-                      // FocusManager.instance.primaryFocus!.unfocus();//ye jab user textfield main icon pe click kren or icon pe click krne k bd bottom sheet khulti jab us main bagher kuch behave kiye wapis aye to keyboard khula nahi rehta
+                    onTap: () {                  
+                      FocusManager.instance.primaryFocus!.unfocus();//ye jab user textfield main icon pe click kren or icon pe click krne k bd bottom sheet khulti jab us main bagher kuch behave kiye wapis aye to keyboard khula nahi rehta
                       Get.bottomSheet(
                         Container(
                           width: double.infinity,

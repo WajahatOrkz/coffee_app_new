@@ -1,9 +1,15 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
+import 'package:coffee_app/features/coffee/domain/entities/coffee_entity.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/coffee_repositories.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
-import 'package:get/get.dart';
-import '../../domain/entities/coffee_entity.dart';
+
+
 
 class CoffeeController extends GetxController {
   final CoffeeRepository repository;

@@ -59,6 +59,7 @@ class RegisterController extends GetxController {
  Future<void> register() async {
     // Validate form
     if (!signUpFormKey.currentState!.validate()) {
+
       return;
     }
 
@@ -89,7 +90,7 @@ class RegisterController extends GetxController {
       );
 
       // Navigate to home screen
-      Get.toNamed(AppRoutes.kHomeCoffeeRoute);
+      Get.toNamed(AppRoutes.kLoginRoute);
     } catch (e) {
       Get.snackbar(
         'Registration Failed',
@@ -111,6 +112,8 @@ class RegisterController extends GetxController {
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
+    
+
     super.onClose();
   }
 }

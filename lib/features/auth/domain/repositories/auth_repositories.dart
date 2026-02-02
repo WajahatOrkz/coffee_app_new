@@ -1,6 +1,6 @@
+import 'package:coffee_app/features/coffee/domain/entities/user_entity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../entities/user_entity.dart';
 
 abstract class AuthRepository {
   Future<UserEntity> login(String email, String password);

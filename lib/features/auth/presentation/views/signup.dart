@@ -1,17 +1,15 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
-import 'package:coffee_app/features/coffee/presentation/controllers/login.dart';
-import 'package:coffee_app/features/coffee/presentation/widgets/custom_button.dart';
-import 'package:coffee_app/features/coffee/presentation/widgets/custom_textfield.dart';
+import 'package:coffee_app/features/auth/presentation/controllers/signup.dart';
 
+import 'package:coffee_app/features/coffee/presentation/widgets/custom_button.dart';
+import 'package:coffee_app/features/auth/presentation/widgets/custom_textfield.dart';
+import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../routes/routes.dart';
 
-
-
-class LoginView extends GetView<LoginController> {
-  const LoginView({super.key});
+class SignUpView extends GetView<RegisterController> {
+  const SignUpView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +20,7 @@ class LoginView extends GetView<LoginController> {
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             title: Text(
               'CoffeeMart',
               style: TextStyle(
@@ -33,42 +32,52 @@ class LoginView extends GetView<LoginController> {
             centerTitle: true,
             backgroundColor: Colors.transparent,
             elevation: 0,
-            automaticallyImplyLeading: false,
+           
           ),
           body: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: const EdgeInsets.all(20),
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 400),
-                padding: const EdgeInsets.all(32),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: const Color(0xFF2A2A2A),
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.kPrimaryColor,
+                      color: AppColors.kPrimaryColor.withOpacity(0.6),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
                   ],
                 ),
                 child: Form(
-                  key: controller.logInFormKey,
+                  key: controller.signUpFormKey,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: 8),
-                      Text(
-                        'Welcome to\nCoffeeMart login now!',
+                      const Text(
+                        'Create an Account?',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
                       ),
                       const SizedBox(height: 32),
-                  
+
+                      // Name Field using Custom Widget
+                      CustomTextField(
+                        label: 'Name',
+                        hintText: 'Ahmed khan',
+                        controller: controller.nameController,
+                        validator: controller.validateName,
+                      ),
+                      const SizedBox(height: 20),
+
                       // Email Field using Custom Widget
                       CustomTextField(
                         label: 'Email',
@@ -78,7 +87,7 @@ class LoginView extends GetView<LoginController> {
                         validator:controller.validateEmail,
                       ),
                       const SizedBox(height: 20),
-                  
+
                       // Password Field using Custom Widget with Toggle
                       Obx(
                         () => CustomTextField(
@@ -98,63 +107,48 @@ class LoginView extends GetView<LoginController> {
                           validator: controller.validatePassword,
                         ),
                       ),
-                      const SizedBox(height: 12),
-                  
-                      // Remember & Forgot Password
-                      Obx(
-                        () => Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: Checkbox(
-                                    value: controller.rememberMe.value,
-                                    onChanged:(Value)=> controller.toggleRememberMe(),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    activeColor: AppColors.kPrimaryColor,
+                      const SizedBox(height: 16),
+
+                      // Terms Checkbox
+                      Row(
+                        children: [
+                          Obx(() => SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: Checkbox(
+                                  value: controller.agreeToTerms.value,
+                                  onChanged: (val) => controller.toggleTerms(),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
                                   ),
+                                  activeColor: AppColors.kPrimaryColor,
                                 ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Remember me',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                'Forget password?',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.kPrimaryColor,
-                                ),
+                              )),
+                          const SizedBox(width: 8),
+                          const Expanded(
+                            child: Text(
+                              'I agree to the Terms of Service',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 24),
-                  
-                      // Login Button using Custom Widget
+
+                      // Create Account Button using Custom Widget
                       Obx(
                         () => CustomButton(
-                          text: 'Login',
-                          onPressed: controller.login,
+                          text: 'Create account',
+                          onPressed: controller.register,
                           isLoading: controller.isLoading.value,
                           backgroundColor: AppColors.kPrimaryColor,
                         ),
                       ),
                       const SizedBox(height: 20),
-                  
+
                       // Or Sign in with
                       Text(
                         'Or Sign in with',
@@ -164,12 +158,12 @@ class LoginView extends GetView<LoginController> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                  
+
                       // Social Login Buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                         
+                        
                           const SizedBox(width: 16),
                           _SocialButton(
                             icon: Icons.g_mobiledata,
@@ -183,30 +177,29 @@ class LoginView extends GetView<LoginController> {
                         ],
                       ),
                       const SizedBox(height: 24),
-                  
-                      // Don't have an account? Sign up
+
+                      // Already have an account? Login
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Don't have an account? ",
+                            "Already have an account? ",
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey[700],
+                              color: Colors.grey[400],
                             ),
                           ),
                           GestureDetector(
                             onTap: (){
-                              print("click ho rahi");
-                            Get.toNamed(AppRoutes.kSignUpRoute);
+                             Get.back();
                             },
                             child: Text(
-                              'Sign up',
+                              'Login',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.kPrimaryColor,
-                              
+                               
                               ),
                             ),
                           ),
@@ -242,8 +235,9 @@ class _SocialButton extends StatelessWidget {
         border: Border.all(color: Colors.grey[300]!),
         borderRadius: BorderRadius.circular(12),
       ),
+      // putting icon button inside container
       child: IconButton(
-        icon: Icon(icon, size: 24,color: Colors.white,),
+        icon: Icon(icon, size: 24, color: Colors.white),
         onPressed: onPressed,
       ),
     );
