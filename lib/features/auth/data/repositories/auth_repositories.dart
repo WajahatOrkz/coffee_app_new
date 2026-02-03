@@ -10,6 +10,11 @@ class AuthRepositoryImpl implements AuthRepository {
     @override
   User? getCurrentUser() => _auth.currentUser;
 
+  @override
+    Stream<User?> authStateChanges() {
+    return _auth.authStateChanges();
+  }
+
   
   @override
   Future<UserEntity> login(String email, String password) async {

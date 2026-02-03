@@ -155,7 +155,7 @@ class LoginView extends GetView<LoginController> {
                             controller.login(formKey);
                             
                             // login se home screen yahan se navigate ho raha
-                            Get.offAllNamed(AppRoutes.kHomeCoffeeRoute);
+                            // Get.offAllNamed(AppRoutes.kHomeCoffeeRoute);
                           },
                           isLoading: controller.isLoading.value,
                           backgroundColor: AppColors.kPrimaryColor,
