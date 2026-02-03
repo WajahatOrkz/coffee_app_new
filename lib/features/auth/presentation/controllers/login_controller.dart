@@ -1,6 +1,6 @@
 import 'package:coffee_app/core/validation/validations.dart';
-import 'package:coffee_app/features/coffee/domain/repositories/auth_repositories.dart';
-import 'package:coffee_app/routes/routes.dart';
+import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,14 +11,14 @@ class LoginController extends GetxController {
   final isLoading = false.obs;
   final isPasswordVisible = false.obs;
   final rememberMe = false.obs;
- late final GlobalKey<FormState> logInFormKey;
+//  late final GlobalKey<FormState> logInFormKey;
 
   final AuthRepository repository = Get.find<AuthRepository>();
 
   @override
   void onInit() {
     super.onInit();
-    logInFormKey = GlobalKey<FormState>();
+    // logInFormKey = GlobalKey<FormState>();
   }
 
   bool togglePasswordVisibility() {
@@ -40,9 +40,9 @@ class LoginController extends GetxController {
   }
  
 //  login function yahan hai
-  Future<void> login() async {
+  Future<void> login(GlobalKey<FormState> formKey) async {
     
-    if (logInFormKey.currentState!.validate()) {
+    if (formKey.currentState!.validate()) {
       try {
         isLoading.value = true;
         
@@ -51,9 +51,9 @@ class LoginController extends GetxController {
           passwordController.text,
         );
         // Ye print karke dekho
-print('Full User Entity: $userEntity');
-print('User Name: ${userEntity.name}');
-print('User Email: ${userEntity.email}');
+        print('Full User Entity: $userEntity');
+        print('User Name: ${userEntity.name}');
+        print('User Email: ${userEntity.email}');
        ;
         Get.snackbar(
           'Success',
@@ -62,8 +62,8 @@ print('User Email: ${userEntity.email}');
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM,
         );
+       
 
-        Get.toNamed(AppRoutes.kHomeCoffeeRoute);
       } catch (e) {
         Get.snackbar(
           'Login Failed',
@@ -81,9 +81,9 @@ print('User Email: ${userEntity.email}');
     }
   }
 
-  Future<void> logout()async{
-   await repository.logout();
-  }
+  // Future<void> logout()async{
+  //  await repository.logout();
+  // }
 
 
 

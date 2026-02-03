@@ -1,4 +1,5 @@
-import 'package:coffee_app/features/coffee/domain/repositories/auth_repositories.dart';
+import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
+
 import 'package:get/get.dart';
 
 class LogoutController extends GetxController {

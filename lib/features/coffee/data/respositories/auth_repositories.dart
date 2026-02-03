@@ -1,6 +1,6 @@
+import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../domain/entities/user_entity.dart';
-import '../../domain/repositories/auth_repositories.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;

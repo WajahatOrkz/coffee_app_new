@@ -1,14 +1,12 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
-import 'package:coffee_app/features/auth/presentation/controllers/signup.dart';
-
+import 'package:coffee_app/features/auth/presentation/controllers/signup_controller.dart';
 import 'package:coffee_app/features/coffee/presentation/widgets/custom_button.dart';
 import 'package:coffee_app/features/auth/presentation/widgets/custom_textfield.dart';
-import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-class SignUpView extends GetView<RegisterController> {
+class SignUpView extends GetView<SignUpController> {
   const SignUpView({super.key});
 
   @override

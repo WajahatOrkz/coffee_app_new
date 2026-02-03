@@ -1,12 +1,13 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/core/validation/validations.dart';
-import 'package:coffee_app/features/coffee/domain/repositories/auth_repositories.dart';
+import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
+
 import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-class RegisterController extends GetxController {
+class SignUpController extends GetxController {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();

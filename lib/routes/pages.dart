@@ -1,6 +1,7 @@
 import 'package:coffee_app/features/auth/presentation/bindings/auth_binding.dart';
-import 'package:coffee_app/features/coffee/presentation/bindings/coffee_binding.dart';
 import 'package:coffee_app/features/auth/presentation/bindings/splash.dart';
+import 'package:coffee_app/features/coffee/presentation/bindings/coffee_binding.dart';
+
 import 'package:coffee_app/features/coffee/presentation/views/cart.dart';
 import 'package:coffee_app/features/coffee/presentation/views/coffee_home.dart';
 import 'package:coffee_app/features/auth/presentation/views/login.dart';
@@ -20,7 +21,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.kLoginRoute,
-      page: () => const LoginView(),
+      page: () =>  LoginView(),
       binding: AuthBinding(),
       transition: Transition.noTransition,
     ),

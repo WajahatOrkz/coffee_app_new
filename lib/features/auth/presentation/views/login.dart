@@ -1,5 +1,5 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
-import 'package:coffee_app/features/auth/presentation/controllers/login.dart';
+import 'package:coffee_app/features/auth/presentation/controllers/login_controller.dart';
 
 import 'package:coffee_app/features/coffee/presentation/widgets/custom_button.dart';
 import 'package:coffee_app/features/auth/presentation/widgets/custom_textfield.dart';
@@ -9,10 +9,10 @@ import 'package:get/get.dart';
 
 import '../../../../../routes/routes.dart';
 
-
-
 class LoginView extends GetView<LoginController> {
-  const LoginView({super.key});
+  LoginView({Key? key}) : super(key: key);
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,8 @@ class LoginView extends GetView<LoginController> {
                   ],
                 ),
                 child: Form(
-                  key: controller.logInFormKey,
+                  key: formKey,
+                  // key: controller.logInFormKey,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -69,17 +70,17 @@ class LoginView extends GetView<LoginController> {
                         ),
                       ),
                       const SizedBox(height: 32),
-                  
+
                       // Email Field using Custom Widget
                       CustomTextField(
                         label: 'Email',
                         hintText: 'ali@gmail.com',
                         controller: controller.emailController,
                         keyboardType: TextInputType.emailAddress,
-                        validator:controller.validateEmail,
+                        validator: controller.validateEmail,
                       ),
                       const SizedBox(height: 20),
-                  
+
                       // Password Field using Custom Widget with Toggle
                       Obx(
                         () => CustomTextField(
@@ -100,7 +101,7 @@ class LoginView extends GetView<LoginController> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                  
+
                       // Remember & Forgot Password
                       Obx(
                         () => Row(
@@ -113,7 +114,8 @@ class LoginView extends GetView<LoginController> {
                                   width: 20,
                                   child: Checkbox(
                                     value: controller.rememberMe.value,
-                                    onChanged:(Value)=> controller.toggleRememberMe(),
+                                    onChanged: (Value) =>
+                                        controller.toggleRememberMe(),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(4),
                                     ),
@@ -144,47 +146,45 @@ class LoginView extends GetView<LoginController> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                  
+
                       // Login Button using Custom Widget
                       Obx(
                         () => CustomButton(
                           text: 'Login',
-                          onPressed: controller.login,
+                          onPressed: () {
+                            controller.login(formKey);
+                            
+                            // login se home screen yahan se navigate ho raha
+                            Get.offAllNamed(AppRoutes.kHomeCoffeeRoute);
+                          },
                           isLoading: controller.isLoading.value,
                           backgroundColor: AppColors.kPrimaryColor,
                         ),
                       ),
                       const SizedBox(height: 20),
-                  
+
                       // Or Sign in with
                       Text(
                         'Or Sign in with',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                       const SizedBox(height: 16),
-                  
+
                       // Social Login Buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                         
                           const SizedBox(width: 16),
                           _SocialButton(
                             icon: Icons.g_mobiledata,
                             onPressed: () {},
                           ),
                           const SizedBox(width: 16),
-                          _SocialButton(
-                            icon: Icons.apple,
-                            onPressed: () {},
-                          ),
+                          _SocialButton(icon: Icons.apple, onPressed: () {}),
                         ],
                       ),
                       const SizedBox(height: 24),
-                  
+
                       // Don't have an account? Sign up
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -197,9 +197,9 @@ class LoginView extends GetView<LoginController> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               print("click ho rahi");
-                            Get.toNamed(AppRoutes.kSignUpRoute);
+                              Get.toNamed(AppRoutes.kSignUpRoute);
                             },
                             child: Text(
                               'Sign up',
@@ -207,7 +207,6 @@ class LoginView extends GetView<LoginController> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.kPrimaryColor,
-                              
                               ),
                             ),
                           ),
@@ -229,10 +228,7 @@ class _SocialButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
 
-  const _SocialButton({
-    required this.icon,
-    required this.onPressed,
-  });
+  const _SocialButton({required this.icon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +240,7 @@ class _SocialButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: IconButton(
-        icon: Icon(icon, size: 24,color: Colors.white,),
+        icon: Icon(icon, size: 24, color: Colors.white),
         onPressed: onPressed,
       ),
     );
