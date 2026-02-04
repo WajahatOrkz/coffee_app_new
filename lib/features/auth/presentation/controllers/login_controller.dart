@@ -1,3 +1,4 @@
+import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/core/validation/validations.dart';
 import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
 
@@ -45,7 +46,6 @@ class LoginController extends GetxController {
     if (formKey.currentState!.validate()) {
       try {
         isLoading.value = true;
-        
         final userEntity = await repository.login(
           emailController.text.trim(),
           passwordController.text,
@@ -54,14 +54,15 @@ class LoginController extends GetxController {
         print('Full User Entity: $userEntity');
         print('User Name: ${userEntity.name}');
         print('User Email: ${userEntity.email}');
-       ;
-        Get.snackbar(
-          'Success',
-          'Welcome ${userEntity.name}!',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-        );
+       
+       
+        // Get.snackbar(
+        //   'Success',
+        //   'Welcome ${userEntity.name}!',
+        //   backgroundColor: AppColors.kPrimaryColor,
+        //   colorText: Colors.white,
+        //   snackPosition: SnackPosition.BOTTOM,
+        // );
        
 
       } catch (e) {

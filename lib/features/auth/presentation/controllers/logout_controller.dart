@@ -5,8 +5,15 @@ import 'package:get/get.dart';
 class LogoutController extends GetxController {
   final AuthRepository repository = Get.find<AuthRepository>();
 
-  Future<void> logout()async{
-   await repository.logout();
+  RxBool isLoading = false.obs;
+
+  Future<void> logout() async {
+  try {
+    isLoading.value = true;
+    await repository.logout();
+  } finally {
+    isLoading.value = false;
   }
+}
 
 }

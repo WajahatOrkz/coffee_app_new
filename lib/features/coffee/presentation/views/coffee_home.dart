@@ -5,36 +5,40 @@ import 'package:coffee_app/features/coffee/presentation/widgets/coffee_card.dart
 import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-class CoffeeHomeView extends GetView<CoffeeController> {
 
+class CoffeeHomeView extends GetView<CoffeeController> {
   @override
   Widget build(BuildContext context) {
-  
+    LogoutController logoutController = Get.find<LogoutController>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Color(0xFF1A1A1A),
-          elevation: 0, 
+          elevation: 0,
           title: Text(
             "Coffee App",
             style: TextStyle(color: Colors.white, fontSize: 14),
           ),
           centerTitle: false,
           actions: [
-            Icon(Icons.notifications_outlined, color: Colors.white,size: 20,),
+            Icon(Icons.notifications_outlined, color: Colors.white, size: 20),
             SizedBox(width: 16),
-                
+
             // Cart Icon with Badge
             Obx(() {
               return Stack(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.shopping_cart_outlined, color: Colors.white,size: 20,),
+                    icon: Icon(
+                      Icons.shopping_cart_outlined,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                     onPressed: () {
                       // Navigate to Cart Screen
                       Get.toNamed(AppRoutes.kCartRoute);
@@ -47,7 +51,7 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                       child: GestureDetector(
                         onTap: () {
                           // Navigate to Cart Screen
-                      Get.toNamed(AppRoutes.kCartRoute);
+                          Get.toNamed(AppRoutes.kCartRoute);
                         },
                         child: Container(
                           padding: EdgeInsets.all(4),
@@ -57,11 +61,10 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                           ),
                           constraints: BoxConstraints(
                             minWidth: 8,
-                            minHeight:8,
+                            minHeight: 8,
                           ),
                           child: Center(
                             child: Text(
-                              
                               '${controller.cartCount.value}',
                               style: TextStyle(
                                 color: Colors.white,
@@ -76,13 +79,29 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                 ],
               );
             }),
-            IconButton(onPressed: ()async {
-              print("logout button is pressing");
-            await Get.find<LogoutController>().logout();
-            },
-            icon: Icon(Icons.logout,color: Colors.white,size: 20,),),
-            SizedBox(width: 10,)
-            ]),
+            Obx(() {
+              if (logoutController.isLoading.value) {
+                return SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    color: AppColors.kPrimaryColor,
+                    strokeWidth: 2,
+                  ),
+                );
+              }
+              return IconButton(
+                onPressed: () async {
+                  print("logout button is pressing");
+                  await logoutController.logout();
+                  // Get.offAllNamed(AppRoutes.kLoginRoute);
+                },
+                icon: Icon(Icons.logout, color: Colors.white, size: 20),
+              );
+            }),
+            SizedBox(width: 10),
+          ],
+        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -98,7 +117,7 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                 ),
               ),
             ),
-      
+
             // Search Bar
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -109,61 +128,84 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                   hintStyle: TextStyle(color: Colors.grey),
                   prefixIcon: Icon(Icons.search, color: Colors.grey),
                   suffixIcon: GestureDetector(
-                    onTap: () {                  
-                      FocusManager.instance.primaryFocus!.unfocus();//ye jab user textfield main icon pe click kren or icon pe click krne k bd bottom sheet khulti jab us main bagher kuch behave kiye wapis aye to keyboard khula nahi rehta
+                    onTap: () {
+                      FocusManager.instance.primaryFocus!
+                          .unfocus(); //ye jab user textfield main icon pe click kren or icon pe click krne k bd bottom sheet khulti jab us main bagher kuch behave kiye wapis aye to keyboard khula nahi rehta
                       Get.bottomSheet(
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Colors.black87),
+                            color: Colors.black87,
+                          ),
                           child: Column(
-                            
-                            
                             children: [
-                              SizedBox(height: 20,),
-                              Text("Bottom Sheet Opened",style: TextStyle(color: Colors.white),),
-                              SizedBox(height: 20,),
-                              SizedBox(height: 20,),
+                              SizedBox(height: 20),
+                              Text(
+                                "Bottom Sheet Opened",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              SizedBox(height: 20),
+                              SizedBox(height: 20),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  IconButton(onPressed: (){controller.decrementFilter();}, icon: Icon(Icons.remove), style: IconButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    iconSize: 15
-                                  )),
-                                  SizedBox(width: 15,),
-                                  Obx(()=> Text("\$${controller.filteredPrice.value}",style: TextStyle(color: Colors.white),)),
-                                  SizedBox(width: 15,),
-                                 IconButton(onPressed: (){controller.incrementFilter();}, icon: Icon(Icons.add), style: IconButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    iconSize: 15
-                                  ))
+                                  IconButton(
+                                    onPressed: () {
+                                      controller.decrementFilter();
+                                    },
+                                    icon: Icon(Icons.remove),
+                                    style: IconButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      iconSize: 15,
+                                    ),
+                                  ),
+                                  SizedBox(width: 15),
+                                  Obx(
+                                    () => Text(
+                                      "\$${controller.filteredPrice.value}",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  SizedBox(width: 15),
+                                  IconButton(
+                                    onPressed: () {
+                                      controller.incrementFilter();
+                                    },
+                                    icon: Icon(Icons.add),
+                                    style: IconButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      iconSize: 15,
+                                    ),
+                                  ),
                                 ],
                               ),
-                              SizedBox(height: 30,),
+                              SizedBox(height: 30),
 
-                              
-                                 TextButton(
-                                  style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.white)),
-                                  onPressed: () {
-                                    controller.applyFilters();
-                                   
-                                    Get.back();
-                                    // Future.delayed(Duration(microseconds: 100));
-                                    FocusManager.instance.primaryFocus!.unfocus(); //bottomsheet bnd hone k bd keyboard disappear yahan se hota
-                                  },
- 
-                                 
-                                 child: Text("Filtered Data"),),
-                              
-                          
+                              TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                    Colors.white,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  controller.applyFilters();
+
+                                  Get.back();
+                                  // Future.delayed(Duration(microseconds: 100));
+                                  FocusManager.instance.primaryFocus!
+                                      .unfocus(); //bottomsheet bnd hone k bd keyboard disappear yahan se hota
+                                },
+
+                                child: Text("Filtered Data"),
+                              ),
                             ],
                           ),
-                        )
+                        ),
                       );
                     },
-                    child: Icon(Icons.tune, color: Colors.grey)),
+                    child: Icon(Icons.tune, color: Colors.grey),
+                  ),
                   filled: true,
                   fillColor: Color(0xFF2A2A2A),
                   border: OutlineInputBorder(
@@ -180,9 +222,9 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                 },
               ),
             ),
-      
+
             SizedBox(height: 24),
-      
+
             // Categories Title
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -195,26 +237,27 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                 ),
               ),
             ),
-      
+
             SizedBox(height: 16),
-      
+
             SizedBox(height: 24),
-      
+
             // Coffee Grid
             Expanded(
               child: Obx(() {
                 if (controller.isLoading.value) {
                   return Center(
-                    child: CircularProgressIndicator(color: AppColors.kPrimaryColor),
+                    child: CircularProgressIndicator(
+                      color: AppColors.kPrimaryColor,
+                    ),
                   );
                 }
-      
+
                 return GridView.builder(
-                  
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    
                     crossAxisCount: 2,
                     childAspectRatio: 0.7,
                     crossAxisSpacing: 16,
@@ -234,43 +277,3 @@ class CoffeeHomeView extends GetView<CoffeeController> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
