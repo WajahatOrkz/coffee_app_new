@@ -82,6 +82,8 @@ class LoginController extends GetxController {
     }
   }
 
+  
+
   // Future<void> logout()async{
   //  await repository.logout();
   // }

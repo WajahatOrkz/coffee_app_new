@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  
+ 
 
 
     @override
@@ -74,4 +76,11 @@ class AuthRepositoryImpl implements AuthRepository {
     await _auth.signOut();
     
   }
+
+
+  
+
+
+
+
 }
