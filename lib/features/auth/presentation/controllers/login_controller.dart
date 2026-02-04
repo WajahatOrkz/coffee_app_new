@@ -93,6 +93,7 @@ class LoginController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     } catch (e) {
+      print(e);
       Get.snackbar(
         'Google Sign-In Failed',
         e.toString().replaceAll('Exception: ', ''),
