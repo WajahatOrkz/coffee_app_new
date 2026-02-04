@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
 import 'package:coffee_app/features/coffee/domain/entities/user_entity.dart';
 
@@ -75,9 +77,16 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<UserEntity> signInWithGoogle() async {
     try {
+      // Initialize GoogleSignIn with serverClientId on Android
+      // The serverClientId is the Web OAuth 2.0 Client ID from Google Cloud Console
+      final String? serverClientId = Platform.isAndroid
+          ? '549640564957-s9qo8eld8j8nke29veg3ikp9d02l401m.apps.googleusercontent.com'
+          : null;
+
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn.instance
-          .authenticate();
+          .initialize(serverClientId: serverClientId)
+          .then((_) => GoogleSignIn.instance.authenticate());
 
       if (googleUser == null) {
         throw Exception("Google Sign-In was cancelled");

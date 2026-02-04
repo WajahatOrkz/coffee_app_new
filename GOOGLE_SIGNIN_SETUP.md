@@ -1,17 +1,55 @@
 # Google Sign-In Setup Guide
 
-## ✅ What's Been Fixed
+## ✅ Current Status
 
-I've successfully implemented the Google Sign-In functionality in your code using the correct google_sign_in 7.x API:
+The Google Sign-In code is implemented but requires the **Web Client ID** (serverClientId) from Google Cloud Console.
 
-1. ✅ Added `signInWithGoogle()` method to the auth repository interface
-2. ✅ Implemented Google Sign-In in the data repository using `GoogleSignIn.instance.authenticate()`
-3. ✅ Added proper null safety checks and error handling
-4. ✅ Added Google Sign-In method to the login controller with user feedback
-5. ✅ Connected the Google Sign-In button in the UI to call the method
-6. ✅ Updated logout to disconnect from Google Sign-In
+### ❌ Current Error
 
-## ⚠️ Required Firebase Configuration
+```
+Exception: Google Sign-In error: GoogleSignInException(code GoogleSignInExceptionCode.clientConfigurationError,
+serverClientId must be provided on Android, null)
+```
+
+This means the `serverClientId` in the code needs to be replaced with your actual Web OAuth 2.0 Client ID.
+
+## 🔧 How to Fix: Get Your Web Client ID
+
+### Step 1: Go to Google Cloud Console
+
+1. Visit [Google Cloud Console](https://console.cloud.google.com/)
+2. Make sure your project is selected: `coffee-app-1cf8d`
+3. Go to **APIs & Services** → **Credentials**
+
+### Step 2: Find the Web Client ID
+
+1. Look for **OAuth 2.0 Client IDs**
+2. Find the entry with type **"Web application"**
+3. Copy the **Client ID** (format: `123456789-abcdefghijklmnopqrstuvwxyz.apps.googleusercontent.com`)
+
+### Step 3: Update Your Code
+
+Open [lib/features/auth/data/repositories/auth_repositories.dart](lib/features/auth/data/repositories/auth_repositories.dart) and replace this line:
+
+```dart
+'549640564957-jj8mj9d1q9q9q9q9q9q9q9q9q9q9q9q9.apps.googleusercontent.com' // TODO: Replace with your actual Web Client ID
+```
+
+With your actual Web Client ID:
+
+```dart
+'YOUR_WEB_CLIENT_ID_HERE.apps.googleusercontent.com'
+```
+
+### Step 4: Test
+
+After updating the code, rebuild and test the Google Sign-In button again.
+
+---
+
+## 📝 Original Setup Instructions
+
+If you haven't configured Firebase yet, follow these:
 
 Your Firebase project needs OAuth credentials to be configured. Here's how:
 
