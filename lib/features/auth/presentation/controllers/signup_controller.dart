@@ -6,16 +6,15 @@ import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class SignUpController extends GetxController {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  
+
   final isLoading = false.obs;
   final isPasswordVisible = false.obs;
   final agreeToTerms = false.obs;
- late final GlobalKey<FormState> signUpFormKey;
+  late final GlobalKey<FormState> signUpFormKey;
 
   final AuthRepository _repository = Get.find<AuthRepository>();
 
@@ -33,7 +32,7 @@ class SignUpController extends GetxController {
     agreeToTerms.value = !agreeToTerms.value;
   }
 
- // Name validator
+  // Name validator
   String? validateName(String? value) {
     return Validators.validateName(value);
   }
@@ -56,11 +55,9 @@ class SignUpController extends GetxController {
   //   );
   // }
 
-
- Future<void> register() async {
+  Future<void> register() async {
     // Validate form
     if (!signUpFormKey.currentState!.validate()) {
-
       return;
     }
 
@@ -76,7 +73,7 @@ class SignUpController extends GetxController {
 
     try {
       isLoading.value = true;
-      
+
       final userEntity = await _repository.register(
         nameController.text.trim(),
         emailController.text.trim(),
@@ -113,7 +110,6 @@ class SignUpController extends GetxController {
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    
 
     super.onClose();
   }

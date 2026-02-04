@@ -5,7 +5,6 @@ import 'package:coffee_app/features/auth/presentation/widgets/custom_textfield.d
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class SignUpView extends GetView<SignUpController> {
   const SignUpView({super.key});
 
@@ -30,7 +29,6 @@ class SignUpView extends GetView<SignUpController> {
             centerTitle: true,
             backgroundColor: Colors.transparent,
             elevation: 0,
-           
           ),
           body: Center(
             child: SingleChildScrollView(
@@ -82,7 +80,7 @@ class SignUpView extends GetView<SignUpController> {
                         hintText: 'ali@gmail.com',
                         controller: controller.emailController,
                         keyboardType: TextInputType.emailAddress,
-                        validator:controller.validateEmail,
+                        validator: controller.validateEmail,
                       ),
                       const SizedBox(height: 20),
 
@@ -110,18 +108,20 @@ class SignUpView extends GetView<SignUpController> {
                       // Terms Checkbox
                       Row(
                         children: [
-                          Obx(() => SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: Checkbox(
-                                  value: controller.agreeToTerms.value,
-                                  onChanged: (val) => controller.toggleTerms(),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  activeColor: AppColors.kPrimaryColor,
+                          Obx(
+                            () => SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: Checkbox(
+                                value: controller.agreeToTerms.value,
+                                onChanged: (val) => controller.toggleTerms(),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
-                              )),
+                                activeColor: AppColors.kPrimaryColor,
+                              ),
+                            ),
+                          ),
                           const SizedBox(width: 8),
                           const Expanded(
                             child: Text(
@@ -150,10 +150,7 @@ class SignUpView extends GetView<SignUpController> {
                       // Or Sign in with
                       Text(
                         'Or Sign in with',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                       const SizedBox(height: 16),
 
@@ -161,17 +158,13 @@ class SignUpView extends GetView<SignUpController> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                        
                           const SizedBox(width: 16),
                           _SocialButton(
                             icon: Icons.g_mobiledata,
                             onPressed: () {},
                           ),
                           const SizedBox(width: 16),
-                          _SocialButton(
-                            icon: Icons.apple,
-                            onPressed: () {},
-                          ),
+                          _SocialButton(icon: Icons.apple, onPressed: () {}),
                         ],
                       ),
                       const SizedBox(height: 24),
@@ -188,8 +181,8 @@ class SignUpView extends GetView<SignUpController> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: (){
-                             Get.back();
+                            onTap: () {
+                              Get.back();
                             },
                             child: Text(
                               'Login',
@@ -197,7 +190,6 @@ class SignUpView extends GetView<SignUpController> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.kPrimaryColor,
-                               
                               ),
                             ),
                           ),
@@ -219,10 +211,7 @@ class _SocialButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
 
-  const _SocialButton({
-    required this.icon,
-    required this.onPressed,
-  });
+  const _SocialButton({required this.icon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

@@ -153,7 +153,6 @@ class LoginView extends GetView<LoginController> {
                           text: 'Login',
                           onPressed: () {
                             controller.login(formKey);
-                            
                           },
                           isLoading: controller.isLoading.value,
                           backgroundColor: AppColors.kPrimaryColor,
@@ -175,7 +174,9 @@ class LoginView extends GetView<LoginController> {
                           const SizedBox(width: 16),
                           _SocialButton(
                             icon: Icons.g_mobiledata,
-                            onPressed: () {},
+                            onPressed: () {
+                              controller.signInWithGoogle();
+                            },
                           ),
                           const SizedBox(width: 16),
                           _SocialButton(icon: Icons.apple, onPressed: () {}),

@@ -45,14 +45,14 @@ class CustomTextField extends StatelessWidget {
           keyboardType: keyboardType,
           obscureText: obscureText,
           validator: validator,
-      
+
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(color: hintColor),
             filled: true,
             fillColor: fillColor,
-            
+
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,

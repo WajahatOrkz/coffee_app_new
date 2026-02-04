@@ -3,10 +3,7 @@ import 'package:coffee_app/features/auth/presentation/controllers/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class SplashScreen extends GetView<SplashController> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +13,7 @@ class SplashScreen extends GetView<SplashController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.local_cafe, 
+              Icons.local_cafe,
               size: 100,
               // color: Colors.brown[800],
               color: AppColors.kPrimaryColor,
@@ -27,7 +24,7 @@ class SplashScreen extends GetView<SplashController> {
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary
+                color: AppColors.textPrimary,
               ),
             ),
             SizedBox(height: 10),
