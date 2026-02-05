@@ -8,12 +8,11 @@ class LogoutController extends GetxController {
   RxBool isLoading = false.obs;
 
   Future<void> logout() async {
-    try {
-      isLoading.value = true;
-      await Future.delayed(Duration(seconds: 2));
-      await repository.logout();
-    } finally {
-      isLoading.value = false;
-    }
+  try {
+    isLoading.value = true;
+    await repository.logout();
+  } finally {
+    isLoading.value = false;
   }
+}
 }

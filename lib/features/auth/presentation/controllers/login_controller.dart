@@ -1,4 +1,3 @@
-import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/core/validation/validations.dart';
 import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
 
@@ -72,37 +71,6 @@ class LoginController extends GetxController {
       }
     } else {
       print("Form Validation Failed");
-    }
-  }
-
-  // Google Sign-In Method
-  Future<void> signInWithGoogle() async {
-    try {
-      isLoading.value = true;
-      final userEntity = await repository.signInWithGoogle();
-
-      print('Google Sign-In Successful');
-      print('User Name: ${userEntity.name}');
-      print('User Email: ${userEntity.email}');
-
-      Get.snackbar(
-        'Success',
-        'Welcome ${userEntity.name}!',
-        backgroundColor: AppColors.kPrimaryColor,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } catch (e) {
-      print(e);
-      Get.snackbar(
-        'Google Sign-In Failed',
-        e.toString().replaceAll('Exception: ', ''),
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } finally {
-      isLoading.value = false;
     }
   }
 

@@ -122,10 +122,12 @@ class AuthRepositoryImpl implements AuthRepository {
       throw Exception("Google Sign-In error: ${e.toString()}");
     }
   }
-
+  
   @override
-  Future<void> logout() async {
-    await GoogleSignIn.instance.disconnect();
-    await _auth.signOut();
-  }
+  Future<void> logout() {
+    throw UnimplementedError();
+  } 
+
+
+
 }
