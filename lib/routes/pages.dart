@@ -27,7 +27,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.kSignUpRoute,
-      page: () => const SignUpView(),
+      page: () =>  SignUpView(),
       binding: AuthBinding(),
       transition: Transition.noTransition,
     ),

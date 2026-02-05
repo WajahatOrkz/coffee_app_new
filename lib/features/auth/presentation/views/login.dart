@@ -1,5 +1,6 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/features/auth/presentation/controllers/login_controller.dart';
+import 'package:coffee_app/features/auth/presentation/widgets/custom_social_button.dart';
 
 import 'package:coffee_app/features/coffee/presentation/widgets/custom_button.dart';
 import 'package:coffee_app/features/auth/presentation/widgets/custom_textfield.dart';
@@ -81,7 +82,6 @@ class LoginView extends GetView<LoginController> {
                           controller: controller.emailController,
                           focusNode: controller.emailFocusNode,//ye focus k liye add ki aghe enter krne k bd doosri line pe shift ho
                           keyboardType: TextInputType.emailAddress,
-                         
                           validator: controller.validateEmail,
                           onFieldSubmitted:(_){controller.passwordFocusNode.requestFocus();} ,
                           
@@ -181,7 +181,7 @@ class LoginView extends GetView<LoginController> {
                           children: [
                             const SizedBox(width: 16),
                             Obx(()=>
-                              _SocialButton(
+                              SocialButton(
                                 icon: Icons.g_mobiledata,
                                 onPressed: () {
                                  controller.signInWithGoogle();
@@ -190,7 +190,7 @@ class LoginView extends GetView<LoginController> {
                               ),
                             ),
                             const SizedBox(width: 16),
-                            _SocialButton(icon: Icons.apple, onPressed: () {}),
+                            SocialButton(icon: Icons.apple, onPressed: () {}),
                           ],
                         ),
                         const SizedBox(height: 24),
@@ -235,36 +235,3 @@ class LoginView extends GetView<LoginController> {
   }
 }
 
-class _SocialButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onPressed;
-  final bool isLoading;
-
-  const _SocialButton({required this.icon, required this.onPressed,  this.isLoading=false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 44,
-      width: 44,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child:isLoading
-          ? Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  AppColors.kPrimaryColor,
-                ),
-              ),
-            )
-          : IconButton(
-              icon: Icon(icon, size: 24, color: Colors.white),
-              onPressed: onPressed,
-            ),
-    );
-  }
-}

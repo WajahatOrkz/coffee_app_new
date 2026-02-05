@@ -10,18 +10,21 @@ class SignUpController extends GetxController {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final nameFocusNode=FocusNode();
+   final emailFocusNode = FocusNode();
+  final passwordFocusNode = FocusNode();
 
   final isLoading = false.obs;
+  final isGoogleLoading=false.obs;
   final isPasswordVisible = false.obs;
   final agreeToTerms = false.obs;
-  late final GlobalKey<FormState> signUpFormKey;
 
-  final AuthRepository _repository = Get.find<AuthRepository>();
+  final AuthRepository repository = Get.find<AuthRepository>();
 
   @override
   void onInit() {
     super.onInit();
-    signUpFormKey = GlobalKey<FormState>();
+    // signUpFormKey = GlobalKey<FormState>();
   }
 
   void togglePasswordVisibility() {
@@ -55,7 +58,7 @@ class SignUpController extends GetxController {
   //   );
   // }
 
-  Future<void> register() async {
+  Future<void> register(GlobalKey<FormState> signUpFormKey) async {
     // Validate form
     if (!signUpFormKey.currentState!.validate()) {
       return;
@@ -74,7 +77,7 @@ class SignUpController extends GetxController {
     try {
       isLoading.value = true;
 
-      final userEntity = await _repository.register(
+      final userEntity = await repository.register(
         nameController.text.trim(),
         emailController.text.trim(),
         passwordController.text,
@@ -86,9 +89,7 @@ class SignUpController extends GetxController {
         backgroundColor: AppColors.kPrimaryColor,
         colorText: Colors.white,
       );
-
-      // Navigate to home screen
-      Get.toNamed(AppRoutes.kLoginRoute);
+    
     } catch (e) {
       Get.snackbar(
         'Registration Failed',
@@ -101,15 +102,47 @@ class SignUpController extends GetxController {
     }
   }
 
-  // void navigateToLogin() {
-  //   Get.back();
-  // }
+      // Google Sign-In Method
+  Future<void> signInWithGoogle() async {
+    try {
+      isGoogleLoading.value = true;
+      final userEntity = await repository.signInWithGoogle();
+
+      print('Google Sign-In Successful');
+      print('User Name: ${userEntity.name}');
+      print('User Email: ${userEntity.email}');
+
+      Get.snackbar(
+        'Success',
+        'Welcome ${userEntity.name}!',
+        backgroundColor: AppColors.kPrimaryColor,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        'Google Sign-In Failed',
+        e.toString().replaceAll('Exception: ', ''),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isGoogleLoading.value = false;
+    }
+  }
+
+  
 
   @override
   void onClose() {
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
+    nameFocusNode.dispose();
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
 
     super.onClose();
   }
