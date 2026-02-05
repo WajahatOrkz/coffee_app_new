@@ -9,14 +9,16 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+
   @override
   User? getCurrentUser() => _auth.currentUser;
 
   @override
-  Stream<User?> authStateChanges() {
+    Stream<User?> authStateChanges() {
     return _auth.authStateChanges();
   }
 
+  
   @override
   Future<UserEntity> login(String email, String password) async {
     try {
@@ -34,7 +36,8 @@ class AuthRepositoryImpl implements AuthRepository {
         id: user.uid,
         name: user.displayName ?? "User",
         email: user.email ?? "",
-        token: await user.getIdToken() ?? '',
+        token: await user.getIdToken() ?? 
+        '',
       );
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message ?? "Login failed");
@@ -43,11 +46,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   // 📝 REGISTER
   @override
-  Future<UserEntity> register(
-    String name,
-    String email,
-    String password,
-  ) async {
+  Future<UserEntity> register(String name, String email, String password) async {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -66,19 +65,17 @@ class AuthRepositoryImpl implements AuthRepository {
         id: user.uid,
         name: name,
         email: email,
-        token: await user.getIdToken() ?? "",
+        token: await user.getIdToken()?? "",
       );
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message ?? "Registration failed");
     }
   }
 
-  // 🔑 GOOGLE SIGN-IN
-  @override
+    @override
   Future<UserEntity> signInWithGoogle() async {
     try {
-      // Initialize GoogleSignIn with serverClientId on Android
-      // The serverClientId is the Web OAuth 2.0 Client ID from Google Cloud Console
+      // GoogleSignIn ko ServerClientId k saath iniatialize kiya hai android pr
       final String? serverClientId = Platform.isAndroid
           ? '549640564957-s9qo8eld8j8nke29veg3ikp9d02l401m.apps.googleusercontent.com'
           : null;
@@ -95,12 +92,12 @@ class AuthRepositoryImpl implements AuthRepository {
       // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
-      // Create a new credential
+      // New credential create howa hai
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
       );
 
-      // Sign in to Firebase with the Google credential
+      //Signin ho raha firbase main gooogle credential k saath
       final UserCredential userCredential = await _auth.signInWithCredential(
         credential,
       );
@@ -122,12 +119,18 @@ class AuthRepositoryImpl implements AuthRepository {
       throw Exception("Google Sign-In error: ${e.toString()}");
     }
   }
-  
-  @override
-  Future<void> logout() {
-    throw UnimplementedError();
-  } 
 
 
 
+ @override
+  Future<void> logout() async {
+    await GoogleSignIn.instance.disconnect();
+    await _auth.signOut();
+  }
 }
+
+
+  
+
+ 
+

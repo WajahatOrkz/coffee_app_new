@@ -6,11 +6,14 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType? keyboardType;
   final bool obscureText;
+  final TextInputAction? textInputAction;
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
   final Color fillColor;
   final Color labelColor;
   final Color hintColor;
+  final FocusNode? focusNode; // keyboard focus k liye add kiya hai k enter krne bd khud aghe jai
+  final void Function(String)? onFieldSubmitted; 
 
   const CustomTextField({
     super.key,
@@ -19,8 +22,11 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     this.keyboardType,
     this.obscureText = false,
+    this.textInputAction,
+    this.onFieldSubmitted,
     this.suffixIcon,
     this.validator,
+    this.focusNode,
     this.fillColor = const Color(0xFF353535),
     this.labelColor = Colors.white,
     this.hintColor = const Color(0xFF9E9E9E),
@@ -45,6 +51,8 @@ class CustomTextField extends StatelessWidget {
           keyboardType: keyboardType,
           obscureText: obscureText,
           validator: validator,
+          focusNode: focusNode,
+          onFieldSubmitted: onFieldSubmitted,
 
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
