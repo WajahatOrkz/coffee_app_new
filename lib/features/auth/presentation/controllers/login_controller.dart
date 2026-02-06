@@ -12,17 +12,15 @@ class LoginController extends GetxController {
   final passwordFocusNode = FocusNode();
 
   final isLoading = false.obs;
-  final isGoogleLoading=false.obs;
+  final isGoogleLoading = false.obs;
   final isPasswordVisible = false.obs;
   final rememberMe = false.obs;
- 
 
   final AuthRepository repository = Get.find<AuthRepository>();
 
   @override
   void onInit() {
     super.onInit();
-  
   }
 
   bool togglePasswordVisibility() {
@@ -78,8 +76,7 @@ class LoginController extends GetxController {
     }
   }
 
-
-    // Google Sign-In Method
+  // Google Sign-In Method
   Future<void> signInWithGoogle() async {
     try {
       isGoogleLoading.value = true;
@@ -112,13 +109,11 @@ class LoginController extends GetxController {
 
   @override
   void onClose() {
-  
+    super.onClose();
     print("onclosen");
     emailFocusNode.dispose();
-  passwordFocusNode.dispose();
+    passwordFocusNode.dispose();
     emailController.dispose();
     passwordController.dispose();
-      super.onClose();
-    
   }
 }

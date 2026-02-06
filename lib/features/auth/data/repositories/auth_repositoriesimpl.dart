@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:coffee_app/features/auth/domain/entities/user_entity.dart';
 import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
-import 'package:coffee_app/features/coffee/domain/entities/user_entity.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -9,16 +9,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-
   @override
   User? getCurrentUser() => _auth.currentUser;
 
   @override
-    Stream<User?> authStateChanges() {
+  Stream<User?> authStateChanges() {
     return _auth.authStateChanges();
   }
 
-  
   @override
   Future<UserEntity> login(String email, String password) async {
     try {
@@ -36,8 +34,7 @@ class AuthRepositoryImpl implements AuthRepository {
         id: user.uid,
         name: user.displayName ?? "User",
         email: user.email ?? "",
-        token: await user.getIdToken() ?? 
-        '',
+        token: await user.getIdToken() ?? '',
       );
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message ?? "Login failed");
@@ -46,7 +43,11 @@ class AuthRepositoryImpl implements AuthRepository {
 
   // 📝 REGISTER
   @override
-  Future<UserEntity> register(String name, String email, String password) async {
+  Future<UserEntity> register(
+    String name,
+    String email,
+    String password,
+  ) async {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -65,14 +66,14 @@ class AuthRepositoryImpl implements AuthRepository {
         id: user.uid,
         name: name,
         email: email,
-        token: await user.getIdToken()?? "",
+        token: await user.getIdToken() ?? "",
       );
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message ?? "Registration failed");
     }
   }
 
-    @override
+  @override
   Future<UserEntity> signInWithGoogle() async {
     try {
       // GoogleSignIn ko ServerClientId k saath iniatialize kiya hai android pr
@@ -120,17 +121,9 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-
-
- @override
+  @override
   Future<void> logout() async {
     await GoogleSignIn.instance.disconnect();
     await _auth.signOut();
   }
 }
-
-
-  
-
- 
-

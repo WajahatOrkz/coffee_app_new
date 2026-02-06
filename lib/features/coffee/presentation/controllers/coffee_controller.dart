@@ -1,19 +1,23 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
+
+import 'package:coffee_app/core/services/user_services.dart';
 import 'package:coffee_app/features/coffee/domain/entities/coffee_entity.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/coffee_repositories.dart';
+
+import 'package:coffee_app/features/coffee/domain/repositories/firestore_repositories.dart';
+
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_navigation/src/snackbar/snackbar.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-
-
-
+import 'package:get/get.dart';
 
 class CoffeeController extends GetxController {
-  final CoffeeRepository repository;
-  CoffeeController(this.repository);
+  final CoffeeRepository coffeeRepository;
+  final FirestoreRepository firestoreRepository;
+  final UserService userService = Get.find<UserService>();
+
+  CoffeeController({
+    required this.coffeeRepository,
+    required this.firestoreRepository,
+  });
 
   // Observable variables
   final allCoffeeList = <CoffeeEntity>[].obs;
@@ -24,15 +28,72 @@ class CoffeeController extends GetxController {
   final filteredPrice = 0.obs;
   final cartItems = <CoffeeEntity>[].obs;
   final cartCount = 0.obs;
-  final cartQuantities = <String, int>{}.obs; // ID -> Quantity mapping
+  final cartQuantities = <String, int>{}.obs;
 
-  // Categories
   final categories = ['All', 'Espresso', 'Cappuccino', 'Cold'];
 
   @override
   void onInit() {
     super.onInit();
     loadCoffeeList();
+    loadUserCart();
+  }
+
+  Future<void> loadUserCart() async {
+    final userId = userService.currentUserId;
+    if (userId == null) {
+      Get.log('No user logged in');
+      return;
+    }
+
+    try {
+      final cartData = await firestoreRepository.loadCart(userId);
+
+      if (cartData != null) {
+        // Restore items
+        final items =
+            (cartData['items'] as List?)?.map((item) {
+              return CoffeeEntity(
+                id: item['id'],
+                name: item['name'],
+                subtitle: item['subtitle'],
+                price: item['price'].toDouble(),
+                image: item['image'],
+                rating: item['rating'].toDouble(),
+              );
+            }).toList() ??
+            [];
+
+        cartItems.value = items;
+
+        // Restore quantities
+        final quantities = Map<String, int>.from(cartData['quantities'] ?? {});
+        cartQuantities.value = quantities;
+
+        _updateCartCount();
+
+        Get.log('✅ Cart loaded for user: $userId');
+      } else {
+        Get.log('No saved cart found for user: $userId');
+      }
+    } catch (e) {
+      Get.log('❌ Error loading cart: $e');
+    }
+  }
+
+  Future<void> _saveCartToFirestore() async {
+    final userId = userService.currentUserId;
+    if (userId == null) {
+      Get.log('Cannot save cart: No user logged in');
+      return;
+    }
+
+    try {
+      await firestoreRepository.saveCart(userId, cartItems, cartQuantities);
+      Get.log('✅ Cart saved for user: $userId');
+    } catch (e) {
+      Get.log('❌ Error saving cart: $e');
+    }
   }
 
   void incrementFilter() {
@@ -63,11 +124,10 @@ class CoffeeController extends GetxController {
     }
   }
 
-  // Load coffee list
   Future<void> loadCoffeeList() async {
     try {
       isLoading.value = true;
-      final list = await repository.getCoffeeList();
+      final list = await coffeeRepository.getCoffeeList();
       allCoffeeList.value = list;
       searchedCoffeeList.value = list;
     } catch (e) {
@@ -81,67 +141,42 @@ class CoffeeController extends GetxController {
     searchQuery.value = query;
 
     if (query.isEmpty) {
-      searchedCoffeeList.value =
-          allCoffeeList; // Agar search empty hai to original list show krna hai wo yahan ho raha
+      searchedCoffeeList.value = allCoffeeList;
     } else {
       searchedCoffeeList.value = allCoffeeList.where((eachItem) {
-        
-        final nameLower = eachItem.name.toLowerCase();  // Search query ke basis pe filter karna yahan se start ho raha
-       
+        final nameLower = eachItem.name.toLowerCase();
         final queryLower = query.toLowerCase();
-
         return nameLower.contains(queryLower);
       }).toList();
     }
   }
 
-  // Ye function search aur counter dono ko check karega
   void applyFilters() {
     String query = searchQuery.value.toLowerCase();
 
-    Get.log("SEARCH $searchQuery and FILTER valus is ${filteredPrice.value}");
-
     searchedCoffeeList.value = allCoffeeList.where((coffee) {
       final matchesName = coffee.name.toLowerCase().contains(query);
-
       final matchesRate =
           filteredPrice.value == 0 || (coffee.price <= filteredPrice.value);
-
       return matchesName && matchesRate;
     }).toList();
 
     Get.log("Filtered Results: ${searchedCoffeeList.length}");
   }
 
-  //   void applyFilters() {
-  //   String query = searchQuery.value.toLowerCase().trim();
-  //   var filterSearchList = allCoffeeList.where((coffee) {
-  //     final bool matchesName = query.isEmpty || coffee.name.toLowerCase().contains(query);
-  //     final bool matchesPrice = filteredValue.value == 0 || (coffee.price <= filteredValue.value);
-  //     return matchesName && matchesPrice;
-  //   }).toList();
-  //   // Pure list ko assign karein taake UI refresh ho
-  //   searchedCoffeeList.value = filterSearchList;
-  //   Get.log("Filtered Results: ${searchedCoffeeList.length}");
-  // }
-
-  // Clear search
   void clearSearch() {
     searchQuery.value = '';
     searchedCoffeeList.value = allCoffeeList;
     applyFilters();
   }
 
+  // ========== Cart Functions ==========
+
   void addToCart(CoffeeEntity coffee) {
-    // Check if item already exists in cart
-    final existingIndex = cartItems.indexWhere(
-      (item) => item.id == coffee.id,
-    ); // Check krna hai item already exist kr raha hai cart main ya nahi?
+    final existingIndex = cartItems.indexWhere((item) => item.id == coffee.id);
 
     if (existingIndex != -1) {
-      cartQuantities[coffee.id] =
-          (cartQuantities[coffee.id] ?? 1) +
-          1; // check kr raha hai k Item already exists kr raha hai agr kr raha hai to - increase quantity
+      cartQuantities[coffee.id] = (cartQuantities[coffee.id] ?? 1) + 1;
 
       Get.snackbar(
         'Updated Cart',
@@ -152,7 +187,6 @@ class CoffeeController extends GetxController {
         duration: Duration(seconds: 2),
       );
     } else {
-      // New item - add krna hai cart ko quantity 1 k saath
       cartItems.add(coffee);
       cartQuantities[coffee.id] = 1;
 
@@ -166,25 +200,23 @@ class CoffeeController extends GetxController {
       );
     }
 
-    // Update total count
     _updateCartCount();
+    _saveCartToFirestore(); // ✅ Save to Firestore
   }
 
-  // Get quantity for a specific item
   int getQuantity(String coffeeId) {
     return cartQuantities[coffeeId] ?? 0;
   }
 
-  // Increase quantity
   void increaseQuantity(CoffeeEntity coffee) {
     if (cartQuantities.containsKey(coffee.id)) {
       cartQuantities[coffee.id] = (cartQuantities[coffee.id] ?? 0) + 1;
       cartQuantities.refresh();
       _updateCartCount();
+      _saveCartToFirestore();
     }
   }
 
-  // Decrease quantity
   void decreaseQuantity(CoffeeEntity coffee) {
     if (cartQuantities.containsKey(coffee.id)) {
       final currentQty = cartQuantities[coffee.id] ?? 0;
@@ -193,18 +225,18 @@ class CoffeeController extends GetxController {
         cartQuantities[coffee.id] = currentQty - 1;
         cartQuantities.refresh();
         _updateCartCount();
+        _saveCartToFirestore();
       } else {
-        // If quantity is 1, remove item completely
         removeFromCart(coffee);
       }
     }
   }
 
-  // Remove from cart
   void removeFromCart(CoffeeEntity coffee) {
     cartItems.removeWhere((item) => item.id == coffee.id);
     cartQuantities.remove(coffee.id);
     _updateCartCount();
+    _saveCartToFirestore();
 
     Get.snackbar(
       'Removed from Cart',
@@ -216,14 +248,17 @@ class CoffeeController extends GetxController {
     );
   }
 
-  // Clear all cart
-  void clearCart() {
+  Future<void> clearCart() async {
     cartItems.clear();
     cartQuantities.clear();
     cartCount.value = 0;
+
+    final userId = userService.currentUserId;
+    if (userId != null) {
+      await firestoreRepository.clearCart(userId);
+    }
   }
 
-  // Update cart count (total items with quantities)
   void _updateCartCount() {
     int totalCount = 0;
     cartQuantities.forEach((key, quantity) {
@@ -232,7 +267,6 @@ class CoffeeController extends GetxController {
     cartCount.value = totalCount;
   }
 
-  // Get total price (price × quantity for each item)
   double get totalPrice {
     double total = 0.0;
     for (var item in cartItems) {
@@ -242,7 +276,6 @@ class CoffeeController extends GetxController {
     return total;
   }
 
-  // Get unique items count
   int get uniqueItemsCount => cartItems.length;
 
   void processCheckout() {

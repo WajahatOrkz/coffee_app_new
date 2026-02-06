@@ -1,8 +1,6 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/core/validation/validations.dart';
 import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
-
-import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,12 +8,12 @@ class SignUpController extends GetxController {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final nameFocusNode=FocusNode();
-   final emailFocusNode = FocusNode();
+  final nameFocusNode = FocusNode();
+  final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
 
   final isLoading = false.obs;
-  final isGoogleLoading=false.obs;
+  final isGoogleLoading = false.obs;
   final isPasswordVisible = false.obs;
   final agreeToTerms = false.obs;
 
@@ -24,7 +22,6 @@ class SignUpController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // signUpFormKey = GlobalKey<FormState>();
   }
 
   void togglePasswordVisibility() {
@@ -89,7 +86,6 @@ class SignUpController extends GetxController {
         backgroundColor: AppColors.kPrimaryColor,
         colorText: Colors.white,
       );
-    
     } catch (e) {
       Get.snackbar(
         'Registration Failed',
@@ -102,7 +98,7 @@ class SignUpController extends GetxController {
     }
   }
 
-      // Google Sign-In Method
+  // Google Sign-In Method
   Future<void> signInWithGoogle() async {
     try {
       isGoogleLoading.value = true;
@@ -133,17 +129,14 @@ class SignUpController extends GetxController {
     }
   }
 
-  
-
   @override
   void onClose() {
+    super.onClose();
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     nameFocusNode.dispose();
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
-
-    super.onClose();
   }
 }

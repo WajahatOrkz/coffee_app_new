@@ -1,4 +1,4 @@
-import 'package:coffee_app/features/auth/data/repositories/auth_repositories.dart';
+import 'package:coffee_app/features/auth/data/repositories/auth_repositoriesimpl.dart';
 import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
 import 'package:coffee_app/features/auth/presentation/controllers/splash.dart';
 
