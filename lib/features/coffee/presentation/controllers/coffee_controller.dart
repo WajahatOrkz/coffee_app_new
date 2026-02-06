@@ -6,6 +6,7 @@ import 'package:coffee_app/features/coffee/domain/repositories/coffee_repositori
 
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repositories.dart';
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,6 +30,7 @@ class CoffeeController extends GetxController {
   final cartItems = <CoffeeEntity>[].obs;
   final cartCount = 0.obs;
   final cartQuantities = <String, int>{}.obs;
+  StreamSubscription<Map<String, dynamic>?>? _cartSubscription;
 
   final categories = ['All', 'Espresso', 'Cappuccino', 'Cold'];
 
@@ -37,6 +39,7 @@ class CoffeeController extends GetxController {
     super.onInit();
     loadCoffeeList();
     loadUserCart();
+    _startCartListener();
   }
 
   Future<void> loadUserCart() async {
@@ -78,6 +81,53 @@ class CoffeeController extends GetxController {
       }
     } catch (e) {
       Get.log('❌ Error loading cart: $e');
+    }
+  }
+
+  void _startCartListener() {
+    final userId = userService.currentUserId;
+    if (userId == null) return;
+
+    try {
+      _cartSubscription = firestoreRepository.streamCart(userId).listen(
+        (cartData) {
+          if (cartData == null) {
+            // document deleted or not exists -> clear local cart
+            cartItems.clear();
+            cartItems.refresh();
+            cartQuantities.clear();
+            cartQuantities.refresh();
+            cartCount.value = 0;
+            Get.log('✅ Remote cart deleted - local cart cleared');
+            return;
+          }
+
+          // update local cart from remote snapshot
+          final items = (cartData['items'] as List?)?.map((item) {
+                return CoffeeEntity(
+                  id: item['id'],
+                  name: item['name'],
+                  subtitle: item['subtitle'],
+                  price: (item['price'] is int) ? (item['price'] as int).toDouble() : (item['price'] as double),
+                  image: item['image'],
+                  rating: (item['rating'] is int) ? (item['rating'] as int).toDouble() : (item['rating'] as double),
+                );
+              }).toList() ?? [];
+
+          cartItems.value = items;
+
+          final quantities = Map<String, int>.from(cartData['quantities'] ?? {});
+          cartQuantities.value = quantities;
+
+          _updateCartCount();
+          Get.log('✅ Cart updated from remote changes');
+        },
+        onError: (e) {
+          Get.log('❌ Cart stream error: $e');
+        },
+      );
+    } catch (e) {
+      Get.log('❌ Failed to start cart listener: $e');
     }
   }
 
@@ -234,7 +284,9 @@ class CoffeeController extends GetxController {
 
   void removeFromCart(CoffeeEntity coffee) {
     cartItems.removeWhere((item) => item.id == coffee.id);
+    cartItems.refresh();
     cartQuantities.remove(coffee.id);
+    cartQuantities.refresh();
     _updateCartCount();
     _saveCartToFirestore();
 
@@ -249,14 +301,30 @@ class CoffeeController extends GetxController {
   }
 
   Future<void> clearCart() async {
-    cartItems.clear();
-    cartQuantities.clear();
-    cartCount.value = 0;
+    try {
+      isLoading.value = true;
+      cartItems.clear();
+      cartItems.refresh();
+      cartQuantities.clear();
+      cartQuantities.refresh();
+      cartCount.value = 0;
 
-    final userId = userService.currentUserId;
-    if (userId != null) {
-      await firestoreRepository.clearCart(userId);
+      final userId = userService.currentUserId;
+      if (userId != null) {
+        await firestoreRepository.clearCart(userId);
+      }
+    } catch (e) {
+      Get.log('❌ Error clearing cart: $e');
+      Get.snackbar('Error', 'Failed to clear cart: $e');
+    } finally {
+      isLoading.value = false;
     }
+  }
+
+  @override
+  void onClose() {
+    _cartSubscription?.cancel();
+    super.onClose();
   }
 
   void _updateCartCount() {

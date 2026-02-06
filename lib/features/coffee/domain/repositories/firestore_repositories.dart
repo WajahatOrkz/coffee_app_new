@@ -9,6 +9,9 @@ abstract class FirestoreRepository {
 
   Future<Map<String, dynamic>?> loadCart(String userId);
 
+  // Stream cart document so UI can react to external changes (deletes/updates)
+  Stream<Map<String, dynamic>?> streamCart(String userId);
+
   Future<void> clearCart(String userId);
 
   Future<void> saveUserPreferences(
