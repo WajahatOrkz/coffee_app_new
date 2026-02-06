@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:coffee_app/core/constants/app_colors.dart';
 
 import 'package:coffee_app/core/services/user_services.dart';
@@ -6,7 +8,6 @@ import 'package:coffee_app/features/coffee/domain/repositories/coffee_repositori
 
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repositories.dart';
 
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,7 +31,7 @@ class CoffeeController extends GetxController {
   final cartItems = <CoffeeEntity>[].obs;
   final cartCount = 0.obs;
   final cartQuantities = <String, int>{}.obs;
-  StreamSubscription<Map<String, dynamic>?>? _cartSubscription;
+    StreamSubscription<Map<String, dynamic>?>? _cartSubscription;
 
   final categories = ['All', 'Espresso', 'Cappuccino', 'Cold'];
 
@@ -71,7 +72,12 @@ class CoffeeController extends GetxController {
 
         // Restore quantities
         final quantities = Map<String, int>.from(cartData['quantities'] ?? {});
+        
+        // ✅ Remove stale quantities - agr item cart mein nahi hai to quantity bhi hatao
+        quantities.removeWhere((id, _) => !items.any((item) => item.id == id));
+        
         cartQuantities.value = quantities;
+        cartQuantities.refresh();
 
         _updateCartCount();
 
@@ -117,7 +123,12 @@ class CoffeeController extends GetxController {
           cartItems.value = items;
 
           final quantities = Map<String, int>.from(cartData['quantities'] ?? {});
+          
+          // ✅ Remove stale quantities - agr item cart mein nahi hai to quantity bhi hatao
+          quantities.removeWhere((id, _) => !items.any((item) => item.id == id));
+          
           cartQuantities.value = quantities;
+          cartQuantities.refresh();
 
           _updateCartCount();
           Get.log('✅ Cart updated from remote changes');
@@ -205,7 +216,7 @@ class CoffeeController extends GetxController {
     String query = searchQuery.value.toLowerCase();
 
     searchedCoffeeList.value = allCoffeeList.where((coffee) {
-      final matchesName = coffee.name.toLowerCase().contains(query);
+      final matchesName = query.isEmpty || coffee.name.toLowerCase().contains(query);
       final matchesRate =
           filteredPrice.value == 0 || (coffee.price <= filteredPrice.value);
       return matchesName && matchesRate;
@@ -228,26 +239,26 @@ class CoffeeController extends GetxController {
     if (existingIndex != -1) {
       cartQuantities[coffee.id] = (cartQuantities[coffee.id] ?? 1) + 1;
 
-      Get.snackbar(
-        'Updated Cart',
-        '${coffee.name} quantity: ${cartQuantities[coffee.id]}',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.kPrimaryColor,
-        colorText: Colors.white,
-        duration: Duration(seconds: 2),
-      );
+      // Get.snackbar(
+      //   'Updated Cart',
+      //   '${coffee.name} quantity: ${cartQuantities[coffee.id]}',
+      //   snackPosition: SnackPosition.BOTTOM,
+      //   backgroundColor: AppColors.kPrimaryColor,
+      //   colorText: Colors.white,
+      //   duration: Duration(seconds: 2),
+      // );
     } else {
       cartItems.add(coffee);
       cartQuantities[coffee.id] = 1;
 
-      Get.snackbar(
-        'Added to Cart',
-        '${coffee.name} added successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.kPrimaryColor,
-        colorText: Colors.white,
-        duration: Duration(seconds: 2),
-      );
+      // Get.snackbar(
+      //   'Added to Cart',
+      //   '${coffee.name} added successfully',
+      //   snackPosition: SnackPosition.BOTTOM,
+      //   backgroundColor: AppColors.kPrimaryColor,
+      //   colorText: Colors.white,
+      //   duration: Duration(seconds: 2),
+      // );
     }
 
     _updateCartCount();
@@ -283,10 +294,17 @@ class CoffeeController extends GetxController {
   }
 
   void removeFromCart(CoffeeEntity coffee) {
+    // ✅ Remove item from cart
     cartItems.removeWhere((item) => item.id == coffee.id);
     cartItems.refresh();
+
+    // ✅ Remove quantity for this item
     cartQuantities.remove(coffee.id);
     cartQuantities.refresh();
+    
+    // ✅ Sanity check: ensure quantities match cartItems
+    _sanitizeQuantities();
+    
     _updateCartCount();
     _saveCartToFirestore();
 
@@ -300,6 +318,7 @@ class CoffeeController extends GetxController {
     );
   }
 
+  
   Future<void> clearCart() async {
     try {
       isLoading.value = true;
@@ -327,12 +346,23 @@ class CoffeeController extends GetxController {
     super.onClose();
   }
 
+
+ 
+
   void _updateCartCount() {
     int totalCount = 0;
     cartQuantities.forEach((key, quantity) {
       totalCount += quantity;
     });
     cartCount.value = totalCount;
+  }
+
+  void _sanitizeQuantities() {
+    // ✅ Remove quantities for items that are not in cart
+    final currentItemIds = cartItems.map((item) => item.id).toSet();
+    cartQuantities.removeWhere((id, _) => !currentItemIds.contains(id));
+    cartQuantities.refresh();
+    Get.log('✅ Quantities sanitized - removed stale entries');
   }
 
   double get totalPrice {
