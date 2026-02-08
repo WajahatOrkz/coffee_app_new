@@ -35,7 +35,7 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
               'cartCount': cartItems.length, // ✅ Cache frequently accessed count
               'lastUpdated': FieldValue.serverTimestamp(),
             },
-            SetOptions(merge: true), // ✅ Prevent data loss if document has other fields
+            // SetOptions(merge: true), // ✅ Prevent data loss if document has other fields
           );
     } catch (e) {
       throw Exception('Cart save failed: $e');
