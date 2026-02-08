@@ -31,7 +31,7 @@ class CoffeeController extends GetxController {
   final cartItems = <CoffeeEntity>[].obs;
   final cartCount = 0.obs;
   final cartQuantities = <String, int>{}.obs;
-    StreamSubscription<Map<String, dynamic>?>? _cartSubscription;
+  StreamSubscription<Map<String, dynamic>?>? _cartSubscription;
 
   final categories = ['All', 'Espresso', 'Cappuccino', 'Cold'];
 
@@ -72,10 +72,10 @@ class CoffeeController extends GetxController {
 
         // Restore quantities
         final quantities = Map<String, int>.from(cartData['quantities'] ?? {});
-        
+
         // ✅ Remove stale quantities - agr item cart mein nahi hai to quantity bhi hatao
         quantities.removeWhere((id, _) => !items.any((item) => item.id == id));
-        
+
         cartQuantities.value = quantities;
         cartQuantities.refresh();
 
@@ -95,48 +95,60 @@ class CoffeeController extends GetxController {
     if (userId == null) return;
 
     try {
-      _cartSubscription = firestoreRepository.streamCart(userId).listen(
-        (cartData) {
-          if (cartData == null) {
-            // document deleted or not exists -> clear local cart
-            cartItems.clear();
-            cartItems.refresh();
-            cartQuantities.clear();
-            cartQuantities.refresh();
-            cartCount.value = 0;
-            Get.log('✅ Remote cart deleted - local cart cleared');
-            return;
-          }
+      _cartSubscription = firestoreRepository
+          .streamCart(userId)
+          .listen(
+            (cartData) {
+              if (cartData == null) {
+                // document deleted or not exists -> clear local cart
+                cartItems.clear();
+                cartItems.refresh();
+                cartQuantities.clear();
+                cartQuantities.refresh();
+                cartCount.value = 0;
+                Get.log('✅ Remote cart deleted - local cart cleared');
+                return;
+              }
 
-          // update local cart from remote snapshot
-          final items = (cartData['items'] as List?)?.map((item) {
-                return CoffeeEntity(
-                  id: item['id'],
-                  name: item['name'],
-                  subtitle: item['subtitle'],
-                  price: (item['price'] is int) ? (item['price'] as int).toDouble() : (item['price'] as double),
-                  image: item['image'],
-                  rating: (item['rating'] is int) ? (item['rating'] as int).toDouble() : (item['rating'] as double),
-                );
-              }).toList() ?? [];
+              // update local cart from remote snapshot
+              final items =
+                  (cartData['items'] as List?)?.map((item) {
+                    return CoffeeEntity(
+                      id: item['id'],
+                      name: item['name'],
+                      subtitle: item['subtitle'],
+                      price: (item['price'] is int)
+                          ? (item['price'] as int).toDouble()
+                          : (item['price'] as double),
+                      image: item['image'],
+                      rating: (item['rating'] is int)
+                          ? (item['rating'] as int).toDouble()
+                          : (item['rating'] as double),
+                    );
+                  }).toList() ??
+                  [];
 
-          cartItems.value = items;
+              cartItems.value = items;
 
-          final quantities = Map<String, int>.from(cartData['quantities'] ?? {});
-          
-          // ✅ Remove stale quantities - agr item cart mein nahi hai to quantity bhi hatao
-          quantities.removeWhere((id, _) => !items.any((item) => item.id == id));
-          
-          cartQuantities.value = quantities;
-          cartQuantities.refresh();
+              final quantities = Map<String, int>.from(
+                cartData['quantities'] ?? {},
+              );
 
-          _updateCartCount();
-          Get.log('✅ Cart updated from remote changes');
-        },
-        onError: (e) {
-          Get.log('❌ Cart stream error: $e');
-        },
-      );
+              // ✅ Remove stale quantities - agr item cart mein nahi hai to quantity bhi hatao
+              quantities.removeWhere(
+                (id, _) => !items.any((item) => item.id == id),
+              );
+
+              cartQuantities.value = quantities;
+              cartQuantities.refresh();
+
+              _updateCartCount();
+              Get.log('✅ Cart updated from remote changes');
+            },
+            onError: (e) {
+              Get.log('❌ Cart stream error: $e');
+            },
+          );
     } catch (e) {
       Get.log('❌ Failed to start cart listener: $e');
     }
@@ -216,7 +228,8 @@ class CoffeeController extends GetxController {
     String query = searchQuery.value.toLowerCase();
 
     searchedCoffeeList.value = allCoffeeList.where((coffee) {
-      final matchesName = query.isEmpty || coffee.name.toLowerCase().contains(query);
+      final matchesName =
+          query.isEmpty || coffee.name.toLowerCase().contains(query);
       final matchesRate =
           filteredPrice.value == 0 || (coffee.price <= filteredPrice.value);
       return matchesName && matchesRate;
@@ -230,8 +243,6 @@ class CoffeeController extends GetxController {
     searchedCoffeeList.value = allCoffeeList;
     applyFilters();
   }
-
-  // ========== Cart Functions ==========
 
   void addToCart(CoffeeEntity coffee) {
     final existingIndex = cartItems.indexWhere((item) => item.id == coffee.id);
@@ -301,10 +312,10 @@ class CoffeeController extends GetxController {
     // ✅ Remove quantity for this item
     cartQuantities.remove(coffee.id);
     cartQuantities.refresh();
-    
+
     // ✅ Sanity check: ensure quantities match cartItems
     _sanitizeQuantities();
-    
+
     _updateCartCount();
     _saveCartToFirestore();
 
@@ -318,7 +329,27 @@ class CoffeeController extends GetxController {
     );
   }
 
-  
+  void removeFromCartById(String coffeeId) {
+    // 1️⃣ Item find karo by ID
+    final item = cartItems.firstWhereOrNull((item) => item.id == coffeeId);
+    if (item == null) return;
+
+    // 2️⃣ Item ko cart se remove karo by ID
+    cartItems.removeWhere((item) => item.id == coffeeId);
+    cartItems.refresh();
+
+    // 3️⃣ Quantity ko bhi remove karo by ID
+    cartQuantities.remove(coffeeId);
+    cartQuantities.refresh();
+    
+    // 4️⃣ Stale quantities clean karo
+    _sanitizeQuantities();
+    
+    // 5️⃣ Firestore update karo
+    _updateCartCount();
+    _saveCartToFirestore();
+  }
+
   Future<void> clearCart() async {
     try {
       isLoading.value = true;
@@ -345,9 +376,6 @@ class CoffeeController extends GetxController {
     _cartSubscription?.cancel();
     super.onClose();
   }
-
-
- 
 
   void _updateCartCount() {
     int totalCount = 0;
