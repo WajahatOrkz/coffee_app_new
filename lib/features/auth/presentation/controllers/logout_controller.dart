@@ -1,3 +1,4 @@
+import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/core/services/user_services.dart';
 import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class LogoutController extends GetxController {
         'Logged Out',
         'Successfully logged out',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.kPrimaryColor,
         colorText: Colors.white,
       );
       

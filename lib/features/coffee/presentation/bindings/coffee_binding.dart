@@ -25,11 +25,11 @@
 import 'package:coffee_app/core/services/user_services.dart';
 import 'package:coffee_app/features/auth/presentation/controllers/logout_controller.dart';
 
-import 'package:coffee_app/features/coffee/data/respositories/coffee_repositories_impl.dart';
-import 'package:coffee_app/features/coffee/data/respositories/firestore_repositories_impl.dart';
-import 'package:coffee_app/features/coffee/domain/repositories/coffee_repositories.dart';
+import 'package:coffee_app/features/coffee/data/respositories/coffee_repository_impl.dart';
+import 'package:coffee_app/features/coffee/data/respositories/firestore_repository_impl.dart';
+import 'package:coffee_app/features/coffee/domain/repositories/coffee_repository.dart';
 
-import 'package:coffee_app/features/coffee/domain/repositories/firestore_repositories.dart';
+import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
 
 import 'package:get/get.dart';
 
