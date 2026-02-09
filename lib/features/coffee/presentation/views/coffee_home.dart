@@ -7,6 +7,8 @@ import 'package:coffee_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../widgets/coffee_card_shimmer.dart';
+
 class CoffeeHomeView extends GetView<CoffeeController> {
   @override
   Widget build(BuildContext context) {
@@ -235,7 +237,7 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                     ),
                   ),
 
-                  SizedBox(height: 16),
+                 
 
                   SizedBox(height: 24),
 
@@ -251,8 +253,11 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
                       ),
-                      itemCount: controller.searchedCoffeeList.length,
+                      itemCount: controller.isLoading.value ? 4 : controller.searchedCoffeeList.length,
                       itemBuilder: (context, index) {
+                        if (controller.isLoading.value) {
+                          return CoffeeCardShimmer();
+                        }
                         final coffeeItem = controller.searchedCoffeeList[index];
                         return CoffeeCard(coffeeData: coffeeItem);
                       },
@@ -260,7 +265,7 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                   ),
                 ],
               ),
-
+              controller.isLoading.value? CustomLoader(): SizedBox.shrink(),
               if (logoutController.isLoading.value) CustomLoader(),
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -15,7 +16,7 @@ class CustomLoader extends StatelessWidget {
           opacity: 0.2,
           child: ModalBarrier(
             dismissible: false,
-            color: Colors.black,
+            color: AppColors.background.withValues(alpha: 0.5),
           ),
         ),
         // Centered loader
@@ -25,11 +26,11 @@ class CustomLoader extends StatelessWidget {
             width: 180,
             padding: EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.black87,
+              color: AppColors.background.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(16),
             ),
             child: SpinKitSpinningLines(
-              color: Colors.white,
+              color: AppColors.kPrimaryColor,
             ),
           ),
         ),
