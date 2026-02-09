@@ -1,5 +1,5 @@
 import 'package:coffee_app/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
+import 'package:coffee_app/features/auth/domain/repositories/auth_repository.dart';
 
 import 'package:coffee_app/features/auth/presentation/controllers/login_controller.dart';
 import 'package:coffee_app/features/auth/presentation/controllers/signup_controller.dart';

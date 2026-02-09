@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:coffee_app/features/auth/domain/entities/user_entity.dart';
-import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
+import 'package:coffee_app/features/auth/domain/repositories/auth_repository.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';

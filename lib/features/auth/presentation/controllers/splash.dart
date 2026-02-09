@@ -1,4 +1,4 @@
-import 'package:coffee_app/features/auth/domain/repositories/auth_repositories.dart';
+import 'package:coffee_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:coffee_app/routes/routes.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
