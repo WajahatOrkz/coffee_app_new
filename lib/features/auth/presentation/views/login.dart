@@ -1,5 +1,6 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/features/auth/presentation/controllers/login_controller.dart';
+import 'package:coffee_app/features/auth/presentation/widgets/custom_loader.dart';
 import 'package:coffee_app/features/auth/presentation/widgets/custom_social_button.dart';
 
 import 'package:coffee_app/features/coffee/presentation/widgets/custom_button.dart';
@@ -38,197 +39,199 @@ class LoginView extends GetView<LoginController> {
             automaticallyImplyLeading: false,
           ),
           body: Obx(
-            ()=>AbsorbPointer(
-              absorbing: controller.isLoading.value,
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Container(
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  padding: const EdgeInsets.all(32),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF2A2A2A),
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.kPrimaryColor,
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
+            ()=>Stack(
+              children: [  
+                Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Container(
+                      constraints: const BoxConstraints(maxWidth: 400),
+                      padding: const EdgeInsets.all(32),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2A2A2A),
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.kPrimaryColor,
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Form(
-                    key: formKey,
-                    // key: controller.logInFormKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(height: 8),
-                        Text(
-                          'Welcome to\nCoffeeMart login now!',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 32),
-            
-                        // Email Field using Custom Widget
-                        CustomTextField(
-                          label: 'Email',
-                          hintText: 'ali@gmail.com',
-                          controller: controller.emailController,
-                          focusNode: controller.emailFocusNode,//ye focus k liye add ki aghe enter krne k bd doosri line pe shift ho
-                          keyboardType: TextInputType.emailAddress,
-                          validator: controller.validateEmail,
-                          onFieldSubmitted:(_){controller.passwordFocusNode.requestFocus();} ,
-                          
-                        ),
-                        const SizedBox(height: 20),
-            
-                        // Password Field using Custom Widget with Toggle
-                        Obx(
-                          () => CustomTextField(
-                            label: 'Password',
-                            hintText: '*Waja1234',
-                            controller: controller.passwordController,
-                            focusNode: controller.passwordFocusNode,
-                            obscureText: !controller.isPasswordVisible.value,
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                controller.isPasswordVisible.value
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: Colors.grey,
+                      child: Form(
+                        key: formKey,
+                        // key: controller.logInFormKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(height: 8),
+                            Text(
+                              'Welcome to\nCoffeeMart login now!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
                               ),
-                              onPressed: controller.togglePasswordVisibility,
                             ),
-                            validator: controller.validatePassword,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-            
-                        // Remember & Forgot Password
-                        Obx(
-                          () => Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: Checkbox(
-                                      value: controller.rememberMe.value,
-                                      onChanged: (Value) =>
-                                          controller.toggleRememberMe(),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      activeColor: AppColors.kPrimaryColor,
-                                    ),
+                            const SizedBox(height: 32),
+                
+                            // Email Field using Custom Widget
+                            CustomTextField(
+                              label: 'Email',
+                              hintText: 'ali@gmail.com',
+                              controller: controller.emailController,
+                              focusNode: controller.emailFocusNode,//ye focus k liye add ki aghe enter krne k bd doosri line pe shift ho
+                              keyboardType: TextInputType.emailAddress,
+                              validator: controller.validateEmail,
+                              onFieldSubmitted:(_){controller.passwordFocusNode.requestFocus();} ,
+                              
+                            ),
+                            const SizedBox(height: 20),
+                
+                            // Password Field using Custom Widget with Toggle
+                            Obx(
+                              () => CustomTextField(
+                                label: 'Password',
+                                hintText: '*Waja1234',
+                                controller: controller.passwordController,
+                                focusNode: controller.passwordFocusNode,
+                                obscureText: !controller.isPasswordVisible.value,
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    controller.isPasswordVisible.value
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    color: Colors.grey,
                                   ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    'Remember me',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey[600],
+                                  onPressed: controller.togglePasswordVisibility,
+                                ),
+                                validator: controller.validatePassword,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                
+                            // Remember & Forgot Password
+                            Obx(
+                              () => Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: Checkbox(
+                                          value: controller.rememberMe.value,
+                                          onChanged: (Value) =>
+                                              controller.toggleRememberMe(),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(4),
+                                          ),
+                                          activeColor: AppColors.kPrimaryColor,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Remember me',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      'Forget password?',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.kPrimaryColor,
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
-                              TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  'Forget password?',
+                            ),
+                            const SizedBox(height: 24),
+                
+                            // Login Button using Custom Widget
+                             CustomButton(
+                                text: 'Login',
+                                onPressed: () {
+                                  controller.login(formKey);
+                                },
+                                // isLoading: controller.isLoading.value,
+                                backgroundColor: AppColors.kPrimaryColor,
+                              ),
+                            
+                            const SizedBox(height: 20),
+                
+                            // Or Sign in with
+                            Text(
+                              'Or Sign in with',
+                              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                            ),
+                            const SizedBox(height: 16),
+                
+                            // Social Login Buttons
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(width: 16),
+                                
+                                  SocialButton(
+                                    icon: Icons.g_mobiledata,
+                                    onPressed: () {
+                                     controller.signInWithGoogle();
+                                    },
+                                    // isLoading:controller.isGoogleLoading.value,
+                                  ),
+                                
+                                const SizedBox(width: 16),
+                                SocialButton(icon: Icons.apple, onPressed: () {}),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+                
+                            // Don't have an account? Sign up
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Don't have an account? ",
                                   style: TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.kPrimaryColor,
+                                    fontSize: 14,
+                                    color: Colors.grey[700],
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-            
-                        // Login Button using Custom Widget
-                        Obx(
-                          () => CustomButton(
-                            text: 'Login',
-                            onPressed: () {
-                              controller.login(formKey);
-                            },
-                            isLoading: controller.isLoading.value,
-                            backgroundColor: AppColors.kPrimaryColor,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-            
-                        // Or Sign in with
-                        Text(
-                          'Or Sign in with',
-                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                        ),
-                        const SizedBox(height: 16),
-            
-                        // Social Login Buttons
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(width: 16),
-                            Obx(()=>
-                              SocialButton(
-                                icon: Icons.g_mobiledata,
-                                onPressed: () {
-                                 controller.signInWithGoogle();
-                                },
-                                isLoading:controller.isGoogleLoading.value,
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            SocialButton(icon: Icons.apple, onPressed: () {}),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-            
-                        // Don't have an account? Sign up
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Don't have an account? ",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[700],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                print("click ho rahi");
-                                Get.toNamed(AppRoutes.kSignUpRoute);
-                              },
-                              child: Text(
-                                'Sign up',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.kPrimaryColor,
+                                GestureDetector(
+                                  onTap: () {
+                                    print("click ho rahi");
+                                    Get.toNamed(AppRoutes.kSignUpRoute);
+                                  },
+                                  child: Text(
+                                    'Sign up',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.kPrimaryColor,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+              // loaindg show krane k liye
+              controller.isLoading.value || controller.isGoogleLoading.value ? CustomLoader() : SizedBox.shrink(),
+              ],
             ),
-          ),
         )),
       ),
     );

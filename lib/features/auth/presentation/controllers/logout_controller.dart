@@ -14,7 +14,9 @@ class LogoutController extends GetxController {
     try {
       isLoading.value = true;
       await Future.delayed(Duration(seconds: 2));
+      
       await repository.logout();
+     
       
       Get.snackbar(
         'Logged Out',
