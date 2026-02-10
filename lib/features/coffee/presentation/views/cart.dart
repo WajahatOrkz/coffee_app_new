@@ -1,5 +1,6 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/features/coffee/presentation/controllers/coffee_controller.dart';
+import 'package:coffee_app/features/coffee/presentation/widgets/custom_checkout_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -181,7 +182,7 @@ class CartScreen extends GetView<CoffeeController> {
                                       child: Container(
                                         padding: EdgeInsets.all(6),
                                         decoration: BoxDecoration(
-                                          color: Color(0xFF1A1A1A),
+                                          color: AppColors.kPrimaryColor,
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                         child: Icon(
@@ -353,17 +354,16 @@ class CartScreen extends GetView<CoffeeController> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-
-                          controller.processCheckout();
-                          // controller.clearCart();                         
-                          // Get.snackbar(
-                          //   'Checkout',
-                          //   'Total: \$${controller.totalPrice.toStringAsFixed(2)}',
-                          //   snackPosition: SnackPosition.BOTTOM,
-                          //   backgroundColor: AppColors.kOrangeColor,
-                          //   colorText: Colors.white,
-                          // );
-                          // Get.back();
+ 
+                          Get.bottomSheet(
+                            CheckoutBottomSheet(),
+                            isDismissible: true,
+                            enableDrag: true,
+                            isScrollControlled: true,
+                          );
+                        
+                         
+                         
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.kPrimaryColor,

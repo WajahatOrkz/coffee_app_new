@@ -397,21 +397,89 @@ class CoffeeController extends GetxController {
 
   int get uniqueItemsCount => cartItems.length;
 
-  void processCheckout() {
-    if (cartItems.isEmpty) {
-      Get.snackbar("Error", "Aapka cart pehle hi khali hai!");
+  // void processCheckout() {
+  //   if (cartItems.isEmpty) {
+  //     Get.snackbar("Error", "Aapka cart pehle hi khali hai!");
+  //     return;
+  //   }
+
+  //   clearCart();
+
+  //   Get.snackbar(
+  //     'Success',
+  //     'Aapki shopping mukammal ho gayi hai!',
+  //     snackPosition: SnackPosition.BOTTOM,
+  //     backgroundColor: AppColors.kPrimaryColor,
+  //     colorText: Colors.white,
+  //   );
+  //   Future.delayed(Duration(seconds: 2), () => Get.back());
+  // }
+
+
+    // ✅ NEW: Confirm Order - Save to Expenses and Clear Cart
+  Future<void> confirmOrder() async {
+    final userId = userService.currentUserId;
+    
+    if (userId == null) {
+      Get.snackbar(
+        'Error',
+        'User not logged in',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
       return;
     }
 
-    clearCart();
+    if (cartItems.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Cart is empty',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
 
-    Get.snackbar(
-      'Success',
-      'Aapki shopping mukammal ho gayi hai!',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.kPrimaryColor,
-      colorText: Colors.white,
-    );
-    Future.delayed(Duration(seconds: 2), () => Get.back());
+    try {
+      isLoading.value = true;
+
+      // Save expense to Firestore
+      await firestoreRepository.saveExpense(
+        userId: userId,
+        items: cartItems,
+        quantities: cartQuantities,
+        totalPrice: totalPrice,
+        totalItems: cartCount.value,
+        uniqueItems: uniqueItemsCount,
+      );
+
+      // Clear cart after successful save
+      await clearCart();
+
+      Get.log('✅ Order confirmed and saved to expenses');
+
+      // Show success message
+      Get.snackbar(
+        'Order Confirmed! ✅',
+        'Your order has been placed successfully',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: Duration(seconds: 3),
+      );
+    } catch (e) {
+      Get.log('❌ Error confirming order: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to place order: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

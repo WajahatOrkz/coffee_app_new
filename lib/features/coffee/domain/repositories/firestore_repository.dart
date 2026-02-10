@@ -26,4 +26,16 @@ abstract class FirestoreRepository {
   // );
   
   Future<Map<String, dynamic>?> loadUserPreferences(String userId);
+
+  // ✅ Expense tracking
+  Future<void> saveExpense({
+    required String userId,
+    required List<CoffeeEntity> items,
+    required Map<String, int> quantities,
+    required double totalPrice,
+    required int totalItems,
+    required int uniqueItems,
+  });
+  
+  Future<List<Map<String, dynamic>>> getUserExpenses(String userId);
 }
