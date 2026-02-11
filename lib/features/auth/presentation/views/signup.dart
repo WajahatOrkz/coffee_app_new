@@ -50,7 +50,7 @@ class SignUpView extends GetView<SignUpController> {
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.kPrimaryColor.withOpacity(0.6),
+                            color: AppColors.kPrimaryColor.withValues(alpha: 0.6),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),

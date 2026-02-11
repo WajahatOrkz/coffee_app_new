@@ -8,23 +8,23 @@ abstract class FirestoreRepository {
     List<CoffeeEntity> cartItems,
     Map<String, int> quantities,
   );
-  
+
   Future<Map<String, dynamic>?> loadCart(String cartId);
-  
+
   Stream<Map<String, dynamic>?> streamCart(String cartId);
-  
+
   Future<void> clearCart(String cartId);
-  
+
   // User methods - ab cartId manage karenge
-  Future<String> createOrGetCartId(String userId); 
-  Future<void> updateUserCartId(String userId, String cartId); 
-  
+  Future<String> createOrGetCartId(String userId);
+  Future<void> updateUserCartId(String userId, String cartId);
+
   // User preferences
   // Future<void> saveUserPreferences(
   //   String userId,
   //   Map<String, dynamic> preferences,
   // );
-  
+
   Future<Map<String, dynamic>?> loadUserPreferences(String userId);
 
   // ✅ Expense tracking
@@ -35,7 +35,12 @@ abstract class FirestoreRepository {
     required double totalPrice,
     required int totalItems,
     required int uniqueItems,
+    required double subtotal,
+    required String taxRate,
+    required double taxAmount,
+    required String paymentMethod,
+    required double totalItemPrice,
   });
-  
+
   Future<List<Map<String, dynamic>>> getUserExpenses(String userId);
 }

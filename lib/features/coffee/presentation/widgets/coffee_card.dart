@@ -35,6 +35,7 @@ class CoffeeCard extends GetView<CoffeeController> {
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       height: 120,
+                      width: double.infinity,
                       color: Colors.grey[800],
                       child: Icon(Icons.coffee, color: Colors.grey),
                     );

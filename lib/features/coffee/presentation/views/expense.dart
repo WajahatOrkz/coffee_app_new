@@ -13,9 +13,11 @@ class ExpenseView extends GetView<ExpenseController> {
       
       appBar: AppBar(
         automaticallyImplyActions: false,
-        leading: GestureDetector
-        
-        (child: Icon(Icons.arrow_back, color: AppColors.textPrimary,)),
+        leading: GestureDetector(
+          onTap: () {
+            Get.back();
+          },
+          child: Icon(Icons.arrow_back, color: AppColors.textPrimary,)),
         title: const Text("Order History",style: TextStyle(color: AppColors.textPrimary),),backgroundColor: AppColors.background,),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -23,7 +25,7 @@ class ExpenseView extends GetView<ExpenseController> {
         }
 
         if (controller.expenses.isEmpty) {
-          return const Center(child: Text("No transactions yet!"));
+          return const Center(child: Text("No transactions yet!",style: TextStyle(color: AppColors.textPrimary),));
         }
 
         return RefreshIndicator(

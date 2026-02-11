@@ -1,13 +1,13 @@
 import 'package:coffee_app/features/auth/domain/entities/user_entity.dart';
 
-class User {
+class UserModel {
   final String id;
   final String name;
   final String email;
   final String password;
   final String token;
 
-  User({
+  UserModel({
     required this.id,
     required this.name,
     required this.email,
@@ -15,8 +15,8 @@ class User {
     required this.token,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
       id: json['id'],
       name: json['name'],
       email: json['email'],

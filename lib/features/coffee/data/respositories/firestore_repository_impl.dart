@@ -61,14 +61,16 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
         {
           'userId': userId,
           'items': cartItems
-              .map((item) => {
-                    'id': item.id,
-                    'name': item.name,
-                    'subtitle': item.subtitle,
-                    'price': item.price,
-                    'image': item.image,
-                    'rating': item.rating,
-                  })
+              .map(
+                (item) => {
+                  'id': item.id,
+                  'name': item.name,
+                  'subtitle': item.subtitle,
+                  'price': item.price,
+                  'image': item.image,
+                  'rating': item.rating,
+                },
+              )
               .toList(),
           'quantities': quantities,
           'cartCount': cartItems.length,
@@ -144,8 +146,7 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
     }
   }
 
-
-   // ✅ Save Expense to Firestore
+  // ✅ Save Expense to Firestore
   @override
   Future<void> saveExpense({
     required String userId,
@@ -154,6 +155,12 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
     required double totalPrice,
     required int totalItems,
     required int uniqueItems,
+    required double totalItemPrice,
+
+    required double subtotal,
+    required String taxRate,
+    required double taxAmount,
+    required String paymentMethod,
   }) async {
     try {
       final expenseId = 'expense_${DateTime.now().millisecondsSinceEpoch}';
@@ -166,8 +173,9 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
           'subtitle': item.subtitle,
           'price': item.price,
           'quantity': quantity,
-          'totalItemPrice': item.price * quantity,
+          'totalItemPrice':totalItemPrice,
           'image': item.image,
+          
         };
       }).toList();
 
@@ -180,6 +188,11 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
         'totalPrice': totalPrice,
         'orderDate': FieldValue.serverTimestamp(),
         'status': 'completed',
+        'subtotal':subtotal,
+        'taxRate':taxRate,
+        'taxAmount':taxAmount,
+        'paymentMethod':paymentMethod,
+        
       });
 
       print('✅ Expense saved: $expenseId');
@@ -203,9 +216,4 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
       throw Exception('Failed to load expenses: $e');
     }
   }
-
-
-  
-
-
 }
