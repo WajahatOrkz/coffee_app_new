@@ -123,7 +123,7 @@ class CheckoutBottomSheet extends StatelessWidget {
                     ? null
                     : () async {
                         await controller.confirmOrder();
-                        Get.back();
+                        
                       },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.kPrimaryColor,

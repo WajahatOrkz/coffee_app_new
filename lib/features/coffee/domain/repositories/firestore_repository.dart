@@ -16,8 +16,8 @@ abstract class FirestoreRepository {
   Future<void> clearCart(String cartId);
   
   // User methods - ab cartId manage karenge
-  Future<String> createOrGetCartId(String userId); // ✅ New method
-  Future<void> updateUserCartId(String userId, String cartId); // ✅ New method
+  Future<String> createOrGetCartId(String userId); 
+  Future<void> updateUserCartId(String userId, String cartId); 
   
   // User preferences
   // Future<void> saveUserPreferences(

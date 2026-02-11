@@ -458,14 +458,16 @@ class CoffeeController extends GetxController {
       // Clear cart after successful save
       await clearCart();
 
+      Get.back();
+
       Get.log('✅ Order confirmed and saved to expenses');
 
       // Show success message
       Get.snackbar(
-        'Order Confirmed! ✅',
+        'Order Confirmed!',
         'Your order has been placed successfully',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.kPrimaryColor,
         colorText: Colors.white,
         duration: Duration(seconds: 3),
       );

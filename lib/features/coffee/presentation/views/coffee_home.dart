@@ -29,8 +29,8 @@ class CoffeeHomeView extends GetView<CoffeeController> {
           ),
           centerTitle: false,
           actions: [
-            Icon(Icons.notifications_outlined, color: Colors.white, size: 20),
-            SizedBox(width: 16),
+            IconButton(onPressed: (){Get.toNamed(AppRoutes.kExpenseRoute);}, icon: Icon(Icons.history,size: 20,color: AppColors.white,)),
+          
 
             // Cart Icon with Badge
             Obx(() {

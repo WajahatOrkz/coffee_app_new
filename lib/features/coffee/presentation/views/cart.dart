@@ -123,7 +123,7 @@ class CartScreen extends GetView<CoffeeController> {
                       margin: EdgeInsets.only(bottom: 12),
                       padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Color(0xFF2A2A2A),
+                        color: AppColors.cardBackground,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Row(
