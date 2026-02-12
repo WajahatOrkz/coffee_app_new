@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_app/features/coffee/domain/entities/coffee_entity.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
+import '../models/cart_model.dart';
+
+import 'package:coffee_app/features/coffee/domain/entities/cart_entity.dart';
 
 class FirestoreRepositoryImpl implements FirestoreRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -85,10 +88,14 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
 
   // ✅ Load cart from carts collection
   @override
-  Future<Map<String, dynamic>?> loadCart(String cartId) async {
+  Future<CartEntity> loadCart(String cartId) async {
     try {
       final doc = await _firestore.collection('carts').doc(cartId).get();
-      return doc.exists ? doc.data() : null;
+
+      final data = Map<String, dynamic>.from(doc.data()!);
+      final cartModel = CartModel.fromMap(data);
+
+      return cartModel.toEntity();
     } catch (e) {
       throw Exception('Cart load failed: $e');
     }
@@ -96,13 +103,19 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
 
   // ✅ Stream cart from carts collection
   @override
-  Stream<Map<String, dynamic>?> streamCart(String cartId) {
+  Stream<CartEntity> streamCart(String cartId) {
     try {
       return _firestore
           .collection('carts')
           .doc(cartId)
           .snapshots()
-          .map((doc) => doc.exists ? doc.data() : null);
+          .map(
+            (doc) => doc.exists
+                ? CartModel.fromMap(
+                    Map<String, dynamic>.from(doc.data()!),
+                  ).toEntity()
+                : CartEntity(items: [], quantities: {}),
+          );
     } catch (e) {
       return Stream.error('Cart stream failed: $e');
     }
@@ -173,9 +186,8 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
           'subtitle': item.subtitle,
           'price': item.price,
           'quantity': quantity,
-          'totalItemPrice':totalItemPrice,
+          'totalItemPrice': totalItemPrice,
           'image': item.image,
-          
         };
       }).toList();
 
@@ -188,11 +200,10 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
         'totalPrice': totalPrice,
         'orderDate': FieldValue.serverTimestamp(),
         'status': 'completed',
-        'subtotal':subtotal,
-        'taxRate':taxRate,
-        'taxAmount':taxAmount,
-        'paymentMethod':paymentMethod,
-        
+        'subtotal': subtotal,
+        'taxRate': taxRate,
+        'taxAmount': taxAmount,
+        'paymentMethod': paymentMethod,
       });
 
       print('✅ Expense saved: $expenseId');

@@ -46,7 +46,7 @@ class ExpenseView extends GetView<ExpenseController> {
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ExpansionTile(
                   title: Text("Total: \$${expense['totalPrice']}",style: TextStyle(color: AppColors.textSecondary),),
-                  subtitle: Text("Date: ${date?.toLocal().toString().split('.')[0] ?? 'N/A'}",style: TextStyle(color: AppColors.textSecondary),),
+                  subtitle: Text("Date: ${date.toLocal().toString().split('.')[0] }",style: TextStyle(color: AppColors.textSecondary),),
                   children: [
                     ...(expense['items'] as List).map((item) => ListTile(
                           leading: CircleAvatar(backgroundImage: NetworkImage(item['image'])),
