@@ -3,6 +3,8 @@ import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/core/services/user_services.dart';
 import 'package:coffee_app/features/coffee/domain/entities/cart_entity.dart';
 import 'package:coffee_app/features/coffee/domain/entities/coffee_entity.dart';
+import 'package:coffee_app/features/coffee/domain/entities/expense_entity.dart';
+import 'package:coffee_app/features/coffee/domain/entities/expense_item_entity.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/coffee_repository.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +31,7 @@ class CoffeeController extends GetxController {
   final cartCount = 0.obs;
   final cartQuantities = <String, int>{}.obs;
 
-  // ✅ Payment Method & Tax
-  final selectedPaymentMethod = ''.obs; // 'cash' or 'card'
+  final selectedPaymentMethod = ''.obs;
 
   String? _currentCartId;
 
@@ -38,9 +39,8 @@ class CoffeeController extends GetxController {
 
   final categories = ['All', 'Espresso', 'Cappuccino', 'Cold'];
 
-  // ✅ Tax rates
-  static const double cashTaxRate = 0.10; // 10%
-  static const double cardTaxRate = 0.05; // 5%
+  static const double cashTaxRate = 0.10;
+  static const double cardTaxRate = 0.05;
 
   @override
   void onInit() {
@@ -49,7 +49,6 @@ class CoffeeController extends GetxController {
     _initializeCart();
   }
 
-  // ✅ Calculate tax amount
   double get taxAmount {
     final basePrice = totalPrice;
 
@@ -62,12 +61,10 @@ class CoffeeController extends GetxController {
     return 0.0;
   }
 
-  // ✅ Calculate final total with tax
   double get finalTotal {
     return totalPrice + taxAmount;
   }
 
-  // ✅ Get tax percentage text
   String get taxPercentage {
     if (selectedPaymentMethod.value == 'cash') {
       return '10%';
@@ -77,7 +74,6 @@ class CoffeeController extends GetxController {
     return '0%';
   }
 
-  // ✅ Set payment method
   void setPaymentMethod(String method) {
     selectedPaymentMethod.value = method;
   }
@@ -107,7 +103,9 @@ class CoffeeController extends GetxController {
     }
 
     try {
-      final CartEntity? cartEntity = await firestoreRepository.loadCart(_currentCartId!);
+      final CartEntity? cartEntity = await firestoreRepository.loadCart(
+        _currentCartId!,
+      );
 
       if (cartEntity != null) {
         // controller now receives domain entity directly
@@ -115,7 +113,9 @@ class CoffeeController extends GetxController {
         cartItems.refresh();
 
         final quantities = Map<String, int>.from(cartEntity.quantities);
-        quantities.removeWhere((id, _) => !cartItems.any((item) => item.id == id));
+        quantities.removeWhere(
+          (id, _) => !cartItems.any((item) => item.id == id),
+        );
 
         cartQuantities.value = quantities;
         cartQuantities.refresh();
@@ -139,13 +139,13 @@ class CoffeeController extends GetxController {
           .streamCart(_currentCartId!)
           .listen(
             (cartEntity) {
-              
-
               cartItems.value = List<CoffeeEntity>.from(cartEntity.items);
               cartItems.refresh();
 
               final quantities = Map<String, int>.from(cartEntity.quantities);
-              quantities.removeWhere((id, _) => !cartItems.any((item) => item.id == id));
+              quantities.removeWhere(
+                (id, _) => !cartItems.any((item) => item.id == id),
+              );
               cartQuantities.value = quantities;
               cartQuantities.refresh();
 
@@ -181,7 +181,6 @@ class CoffeeController extends GetxController {
     }
   }
 
-  // ✅ Confirm Order - Save with final total (including tax)
   Future<void> confirmOrder() async {
     final userId = userService.currentUserId;
 
@@ -217,48 +216,61 @@ class CoffeeController extends GetxController {
       );
       return;
     }
+    // 🔥 Check if cartId exists
+    if (_currentCartId == null) {
+      Get.snackbar(
+        'Error',
+        'Cart ID not found',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
 
     try {
       isLoading.value = true;
 
       // ✅ Save expense with final total (including tax)
-      await firestoreRepository.saveExpense(
+      final expenseEntity = ExpenseEntity(
+        expenseId: DateTime.now().millisecondsSinceEpoch.toString(),
         userId: userId,
-        items: cartItems,
-        quantities: cartQuantities,
-        totalPrice: finalTotal,
+        items: cartItems.map((item) {
+          final quantity = cartQuantities[item.id] ?? 0;
+          return ExpenseItemEntity(
+            id: item.id,
+            name: item.name,
+            subtitle: item.subtitle,
+            price: item.price,
+            quantity: quantity,
+            totalItemPrice: item.price * quantity,
+            image: item.image,
+          );
+        }).toList(),
         totalItems: cartCount.value,
         uniqueItems: uniqueItemsCount,
-        totalItemPrice:  finalTotal *
-    cartQuantities.values.fold(0, (sum, item) => sum + item),
-
-
+        totalPrice: finalTotal,
         subtotal: totalPrice,
         taxRate: taxPercentage,
         taxAmount: taxAmount,
-
         paymentMethod: selectedPaymentMethod.value,
+        status: 'completed',
+        orderDate: DateTime.now(),
       );
 
-      // Clear cart after successful save
-      await clearCart();
+      await firestoreRepository.saveExpense(expenseEntity);
 
-      // Reset payment method
+      await firestoreRepository.clearCart(_currentCartId!);
+      Get.log('✅ clearCart completed');
+
+      cartItems.clear();
+      cartQuantities.clear();
       selectedPaymentMethod.value = '';
+      _currentCartId = null;
 
-      Get.back(); // Close bottom sheet
+      Get.back();
 
       Get.log('✅ Order confirmed and saved to expenses');
-
-      // Show success message
-      Get.snackbar(
-        'Order Confirmed!',
-        'Total: \$${finalTotal.toStringAsFixed(2)} (including ${taxPercentage} tax)',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.kPrimaryColor,
-        colorText: Colors.white,
-        duration: Duration(seconds: 3),
-      );
     } catch (e) {
       Get.log('❌ Error confirming order: $e');
       Get.snackbar(

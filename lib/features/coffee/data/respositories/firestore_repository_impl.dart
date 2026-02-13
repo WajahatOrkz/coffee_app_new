@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_app/features/coffee/data/models/expense_model.dart';
 import 'package:coffee_app/features/coffee/domain/entities/coffee_entity.dart';
+import 'package:coffee_app/features/coffee/domain/entities/expense_entity.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
 import '../models/cart_model.dart';
 
@@ -8,7 +10,6 @@ import 'package:coffee_app/features/coffee/domain/entities/cart_entity.dart';
 class FirestoreRepositoryImpl implements FirestoreRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // ✅ Create or get existing cartId for user
   @override
   Future<String> createOrGetCartId(String userId) async {
     try {
@@ -38,7 +39,6 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
     }
   }
 
-  // ✅ Update user's cartId
   @override
   Future<void> updateUserCartId(String userId, String cartId) async {
     try {
@@ -51,7 +51,6 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
     }
   }
 
-  // ✅ Save cart to carts collection
   @override
   Future<void> saveCart(
     String userId,
@@ -86,7 +85,6 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
     }
   }
 
-  // ✅ Load cart from carts collection
   @override
   Future<CartEntity> loadCart(String cartId) async {
     try {
@@ -101,7 +99,6 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
     }
   }
 
-  // ✅ Stream cart from carts collection
   @override
   Stream<CartEntity> streamCart(String cartId) {
     try {
@@ -121,7 +118,6 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
     }
   }
 
-  // ✅ Clear cart from carts collection
   @override
   Future<void> clearCart(String cartId) async {
     try {
@@ -147,83 +143,58 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
   //   }
   // }
 
+  // @override
+  // Future<Map<String, dynamic>?> loadUserPreferences(String userId) async {
+  //   try {
+  //     final doc = await _firestore.collection('users').doc(userId).get();
+  //     if (!doc.exists) return null;
+  //     final data = doc.data();
+  //     return data?['preferences'] as Map<String, dynamic>?;
+  //   } catch (e) {
+  //     throw Exception('Preferences load failed: $e');
+  //   }
+  // }
+
   @override
-  Future<Map<String, dynamic>?> loadUserPreferences(String userId) async {
+  Future<void> saveExpense(ExpenseEntity entity) async {
     try {
-      final doc = await _firestore.collection('users').doc(userId).get();
-      if (!doc.exists) return null;
-      final data = doc.data();
-      return data?['preferences'] as Map<String, dynamic>?;
+      // ✅ Step 1: Entity → Model
+      final model = ExpenseModel.fromEntity(entity);
+
+      // ✅ Step 2: Model → JSON and Save to Firestore
+      await _firestore
+          .collection('expenses')
+          .doc(model.expenseId)
+          .set(model.toJson());
+
+      print('✅ Expense saved successfully: ${model.expenseId}');
     } catch (e) {
-      throw Exception('Preferences load failed: $e');
-    }
-  }
-
-  // ✅ Save Expense to Firestore
-  @override
-  Future<void> saveExpense({
-    required String userId,
-    required List<CoffeeEntity> items,
-    required Map<String, int> quantities,
-    required double totalPrice,
-    required int totalItems,
-    required int uniqueItems,
-    required double totalItemPrice,
-
-    required double subtotal,
-    required String taxRate,
-    required double taxAmount,
-    required String paymentMethod,
-  }) async {
-    try {
-      final expenseId = 'expense_${DateTime.now().millisecondsSinceEpoch}';
-
-      final itemsData = items.map((item) {
-        final quantity = quantities[item.id] ?? 1;
-        return {
-          'id': item.id,
-          'name': item.name,
-          'subtitle': item.subtitle,
-          'price': item.price,
-          'quantity': quantity,
-          'totalItemPrice': totalItemPrice,
-          'image': item.image,
-        };
-      }).toList();
-
-      await _firestore.collection('expenses').doc(expenseId).set({
-        'userId': userId,
-        'expenseId': expenseId,
-        'items': itemsData,
-        'totalItems': totalItems,
-        'uniqueItems': uniqueItems,
-        'totalPrice': totalPrice,
-        'orderDate': FieldValue.serverTimestamp(),
-        'status': 'completed',
-        'subtotal': subtotal,
-        'taxRate': taxRate,
-        'taxAmount': taxAmount,
-        'paymentMethod': paymentMethod,
-      });
-
-      print('✅ Expense saved: $expenseId');
-    } catch (e) {
+      print('❌ Error saving expense: $e');
       throw Exception('Failed to save expense: $e');
     }
   }
 
-  // ✅ Get user expenses
   @override
-  Future<List<Map<String, dynamic>>> getUserExpenses(String userId) async {
+  Future<List<ExpenseEntity>> getUserExpenses(String userId) async {
     try {
+      // ✅ Step 1: Fetch from Firestore
       final snapshot = await _firestore
           .collection('expenses')
           .where('userId', isEqualTo: userId)
           .orderBy('orderDate', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => doc.data()).toList();
+      // ✅ Step 2: JSON → Model → Entity
+      final entities = snapshot.docs
+          .map((doc) => ExpenseModel.fromJson(doc.data(), doc.id).toEntity())
+          .toList();
+
+      print('✅ Fetched ${entities.length} expenses for user: $userId');
+
+      // ✅ Step 3: Return List<ExpenseEntity> (NOT Model)
+      return entities;
     } catch (e) {
+      print('❌ Error fetching expenses: $e');
       throw Exception('Failed to load expenses: $e');
     }
   }

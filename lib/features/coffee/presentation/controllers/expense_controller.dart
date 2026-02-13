@@ -1,3 +1,4 @@
+import 'package:coffee_app/features/coffee/domain/entities/expense_entity.dart';
 import 'package:get/get.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
 
@@ -8,7 +9,7 @@ class ExpenseController extends GetxController {
   ExpenseController({required this.repository, required this.userId});
 
   // UI update ke liye observable variables
-  var expenses = <Map<String, dynamic>>[].obs;
+  var expenses = <ExpenseEntity>[].obs;
   var isLoading = false.obs;
 
   void onInit() {
