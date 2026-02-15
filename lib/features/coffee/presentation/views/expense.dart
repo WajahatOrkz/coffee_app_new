@@ -22,6 +22,14 @@ class ExpenseView extends GetView<ExpenseController> {
           style: TextStyle(color: AppColors.textPrimary),
         ),
         backgroundColor: AppColors.background,
+        actions: [
+          IconButton(
+            onPressed: () {
+              controller.downloadPdf();
+            },
+            icon: const Icon(Icons.picture_as_pdf, color: AppColors.textPrimary),
+          ),
+        ],
       ),
       body: Obx(() {
         if (controller.isLoading.value) {

@@ -1,6 +1,7 @@
 import 'package:coffee_app/features/coffee/domain/entities/expense_entity.dart';
 import 'package:get/get.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
+import 'package:coffee_app/features/coffee/data/services/pdf_service.dart';
 
 class ExpenseController extends GetxController {
   final FirestoreRepository repository;
@@ -33,6 +34,20 @@ class ExpenseController extends GetxController {
       print("Error fetching expenses: $e");
     } finally {
       isLoading(false);
+    }
+  }
+
+  Future<void> downloadPdf() async {
+    if (expenses.isEmpty) {
+      Get.snackbar("Error", "No transactions to download");
+      return;
+    }
+    
+    try {
+      final pdfService = PdfService();
+      await pdfService.generateTransactionHistoryPdf(expenses);
+    } catch (e) {
+      Get.snackbar("Error", "Failed to generate PDF: $e");
     }
   }
 
