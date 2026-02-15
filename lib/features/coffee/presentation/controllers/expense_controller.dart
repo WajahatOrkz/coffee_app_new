@@ -1,7 +1,7 @@
 import 'package:coffee_app/features/coffee/domain/entities/expense_entity.dart';
 import 'package:get/get.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
-import 'package:coffee_app/features/coffee/data/services/pdf_service.dart';
+import 'package:coffee_app/core/services/pdf_service.dart';
 
 class ExpenseController extends GetxController {
   final FirestoreRepository repository;
