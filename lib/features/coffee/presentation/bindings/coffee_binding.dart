@@ -47,7 +47,9 @@ class CoffeeBinding extends Bindings {
     Get.lazyPut<FirestoreRepository>(() => FirestoreRepositoryImpl());
 
     // ✅ Coffee Repository
-    Get.lazyPut<CoffeeRepository>(() => CoffeeRepositoryImpl());
+    Get.lazyPut<CoffeeRepository>(() => CoffeeRepositoryImpl(
+      firestoreRepository: Get.find<FirestoreRepository>(),
+    ));
 
     // ✅ CoffeeController with both repositories
     Get.lazyPut(() => CoffeeController(

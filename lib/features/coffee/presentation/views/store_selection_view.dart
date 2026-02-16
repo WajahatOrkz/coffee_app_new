@@ -21,7 +21,7 @@ class StoreSelectionView extends GetView<StoreController> {
           IconButton(
             icon: Icon(Icons.add, color: AppColors.kPrimaryColor),
             onPressed: () {
-              showAddStoreDialog();
+              Get.dialog(showAddStoreDialog());
             },
           ),
         ],

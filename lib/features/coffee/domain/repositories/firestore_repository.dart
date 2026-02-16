@@ -24,4 +24,7 @@ abstract class FirestoreRepository {
 
   Future<List<StoreEntity>> getStores();
   Future<void> addStore(StoreEntity store);
+
+  Future<List<CoffeeEntity>> getProducts(String storeId);
+  Future<void> saveProducts(String storeId, List<CoffeeEntity> products);
 }

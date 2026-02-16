@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_app/features/coffee/data/models/coffee_model.dart';
 import 'package:coffee_app/features/coffee/data/models/expense_model.dart';
 import 'package:coffee_app/features/coffee/data/models/store_model.dart';
 import 'package:coffee_app/features/coffee/domain/entities/coffee_entity.dart';
@@ -232,6 +233,45 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
       }
     } catch (e) {
       throw Exception('Failed to add store: $e');
+    }
+  }
+  @override
+  Future<List<CoffeeEntity>> getProducts(String storeId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('stores')
+          .doc(storeId)
+          .collection('products')
+          .get();
+
+      return snapshot.docs
+          .map((doc) => CoffeeModel.fromJson(doc.data()).toEntity())
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to load products for store $storeId: $e');
+    }
+  }
+
+  @override
+  Future<void> saveProducts(String storeId, List<CoffeeEntity> products) async {
+    try {
+      final batch = _firestore.batch();
+      final collection = _firestore
+          .collection('stores')
+          .doc(storeId)
+          .collection('products');
+
+      // First delete existing products (optional, but good for seeding)
+      // For now, we just overwrite/add
+
+      for (var product in products) {
+        final docRef = collection.doc(product.id);
+        batch.set(docRef, CoffeeModel.fromEntity(product).toJson());
+      }
+
+      await batch.commit();
+    } catch (e) {
+      throw Exception('Failed to save products: $e');
     }
   }
 }

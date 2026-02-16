@@ -1,3 +1,4 @@
+import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/features/coffee/domain/entities/store_entity.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class StoreController extends GetxController {
 
   Future<void> loadStores() async {
     try {
+      print("store controller call ho raha hai??");
       isLoading.value = true;
       final loadedStores = await repository.getStores();
       stores.value = loadedStores;
@@ -35,11 +37,17 @@ class StoreController extends GetxController {
 
   Future<void> addStore() async {
     if (nameController.text.isEmpty || addressController.text.isEmpty) {
-      Get.snackbar('Error', 'Please fill in all fields');
+      Get.snackbar(
+        'Error',
+        'Please fill in all fields',
+        backgroundColor: AppColors.kPrimaryColor,
+        colorText: AppColors.textPrimary,
+      );
       return;
     }
 
     try {
+      print("store controller call ho raha hai??");
       isLoading.value = true;
       final newStore = StoreEntity(
         id: '', // Firestore will generate ID if we use add() logic or we can generate here
@@ -48,16 +56,25 @@ class StoreController extends GetxController {
       );
 
       await repository.addStore(newStore);
-      
+
       nameController.clear();
       addressController.clear();
       Get.back(); // Close dialog
-      
+
       await loadStores();
-      Get.snackbar('Success', 'Store added successfully');
-      
+      Get.snackbar(
+        'Success',
+        'Store added successfully',
+        colorText: AppColors.kPrimaryColor,
+        backgroundColor: AppColors.kPrimaryColor,
+      );
     } catch (e) {
-      Get.snackbar('Error', 'Failed to add store: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to add store: $e',
+        colorText: AppColors.kPrimaryColor,
+        backgroundColor: AppColors.kPrimaryColor,
+      );
     } finally {
       isLoading.value = false;
     }
@@ -66,7 +83,7 @@ class StoreController extends GetxController {
   void selectStore(StoreEntity store) {
     selectedStore.value = store;
   }
-  
+
   // Method to clear selected store on logout if needed
   void clearSelection() {
     selectedStore.value = null;

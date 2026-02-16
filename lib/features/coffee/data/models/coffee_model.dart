@@ -17,6 +17,17 @@ class CoffeeModel {
     required this.rating,
   });
 
+  factory CoffeeModel.fromEntity(CoffeeEntity entity) {
+    return CoffeeModel(
+      id: entity.id,
+      name: entity.name,
+      subtitle: entity.subtitle,
+      price: entity.price,
+      image: entity.image,
+      rating: entity.rating,
+    );
+  }
+
   factory CoffeeModel.fromMap(Map<String, dynamic> map) {
     return CoffeeModel(
       id: map['id'] as String? ?? '',
@@ -48,6 +59,8 @@ class CoffeeModel {
         'image': image,
         'rating': rating,
       };
+
+  Map<String, dynamic> toJson() => toMap();
 
   CoffeeEntity toEntity() {
     return CoffeeEntity(

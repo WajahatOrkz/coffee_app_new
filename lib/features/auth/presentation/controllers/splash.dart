@@ -17,7 +17,7 @@ class SplashController extends GetxController {
       if (user == null) {
         Get.offAllNamed(AppRoutes.kLoginRoute);
       } else {
-        Get.offAllNamed(AppRoutes.kHomeCoffeeRoute);
+        Get.offAllNamed(AppRoutes.kStoreSelectionViewRoute);
       }
     });
   }

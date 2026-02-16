@@ -46,8 +46,30 @@ class CoffeeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    loadCoffeeList();
+    // Seed data on init (checking if needed inside the repo)
+    _seedAndLoad();
     _initializeCart();
+    
+    // Listen to store changes
+    if (Get.isRegistered<StoreController>()) {
+      ever(Get.find<StoreController>().selectedStore, (_) {
+        loadCoffeeList();
+      });
+    }
+  }
+
+  Future<void> _seedAndLoad() async {
+    try {
+      await coffeeRepository.seedData();
+      
+      // ✅ Refresh stores in StoreController if they were just seeded
+      if (Get.isRegistered<StoreController>()) {
+        await Get.find<StoreController>().loadStores();
+      }
+    } catch (e) {
+      Get.log('Seeding error: $e');
+    }
+    loadCoffeeList();
   }
 
   double get taxAmount {
@@ -337,7 +359,12 @@ class CoffeeController extends GetxController {
   Future<void> loadCoffeeList() async {
     try {
       isLoading.value = true;
-      final list = await coffeeRepository.getCoffeeList();
+      String? storeId;
+      if (Get.isRegistered<StoreController>()) {
+        storeId = Get.find<StoreController>().selectedStore.value?.id;
+      }
+      
+      final list = await coffeeRepository.getCoffeeList(storeId: storeId);
       allCoffeeList.value = list;
       searchedCoffeeList.value = list;
     } catch (e) {

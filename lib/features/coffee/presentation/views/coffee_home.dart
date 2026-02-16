@@ -21,16 +21,26 @@ class CoffeeHomeView extends GetView<CoffeeController> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: Color(0xFF1A1A1A),
+          leading: GestureDetector(
+            onTap: () {
+              Get.back();
+            },
+            child: Icon(Icons.arrow_back, color: AppColors.white),
+          ),
+          backgroundColor: AppColors.background,
           elevation: 0,
           title: Text(
             "Coffee App",
-            style: TextStyle(color: Colors.white, fontSize: 14),
+            style: TextStyle(color: Colors.white, fontSize: 16),
           ),
           centerTitle: false,
           actions: [
-            IconButton(onPressed: (){Get.toNamed(AppRoutes.kExpenseRoute);}, icon: Icon(Icons.history,size: 20,color: AppColors.white,)),
-          
+            IconButton(
+              onPressed: () {
+                Get.toNamed(AppRoutes.kExpenseRoute);
+              },
+              icon: Icon(Icons.history, size: 20, color: AppColors.white),
+            ),
 
             // Cart Icon with Badge
             Obx(() {
@@ -237,8 +247,6 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                     ),
                   ),
 
-                 
-
                   SizedBox(height: 24),
 
                   // Coffee Grid
@@ -253,7 +261,9 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
                       ),
-                      itemCount: controller.isLoading.value ? 4 : controller.searchedCoffeeList.length,
+                      itemCount: controller.isLoading.value
+                          ? 4
+                          : controller.searchedCoffeeList.length,
                       itemBuilder: (context, index) {
                         if (controller.isLoading.value) {
                           return CoffeeCardShimmer();
@@ -265,7 +275,7 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                   ),
                 ],
               ),
-              controller.isLoading.value? CustomLoader(): SizedBox.shrink(),
+              controller.isLoading.value ? CustomLoader() : SizedBox.shrink(),
               if (logoutController.isLoading.value) CustomLoader(),
             ],
           ),
