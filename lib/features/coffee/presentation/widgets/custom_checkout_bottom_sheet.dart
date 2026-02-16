@@ -217,6 +217,7 @@
 
 import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/features/coffee/presentation/controllers/coffee_controller.dart';
+import 'package:coffee_app/features/coffee/presentation/controllers/store_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -284,6 +285,66 @@ class CheckoutBottomSheet extends StatelessWidget {
               Divider(color: Colors.grey[800], thickness: 1),
               
               SizedBox(height: 20),
+
+              // Store Location Section
+              if (Get.isRegistered<StoreController>())
+                Obx(() {
+                  final store = Get.find<StoreController>().selectedStore.value;
+                  return Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Store Location',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF2A2A2A),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey[800]!),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.location_on, color: AppColors.kPrimaryColor),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    store?.name ?? 'No Store Selected',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  if (store != null)
+                                    Text(
+                                      store.address,
+                                      style: TextStyle(color: Colors.grey, fontSize: 14),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Divider(color: Colors.grey[800], thickness: 1),
+                      SizedBox(height: 20),
+                    ],
+                  );
+                }),
 
               // Payment Method Selection
               Align(

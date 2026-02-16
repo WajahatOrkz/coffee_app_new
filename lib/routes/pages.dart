@@ -2,6 +2,8 @@ import 'package:coffee_app/features/auth/presentation/bindings/auth_binding.dart
 import 'package:coffee_app/features/auth/presentation/bindings/splash.dart';
 import 'package:coffee_app/features/coffee/presentation/bindings/coffee_binding.dart';
 import 'package:coffee_app/features/coffee/presentation/bindings/expense_binding.dart';
+import 'package:coffee_app/features/coffee/presentation/bindings/store_binding.dart';
+import 'package:coffee_app/features/coffee/presentation/views/store_selection_view.dart';
 
 import 'package:coffee_app/features/coffee/presentation/views/cart.dart';
 import 'package:coffee_app/features/coffee/presentation/views/coffee_home.dart';
@@ -45,7 +47,12 @@ class AppPages {
       binding: CoffeeBinding(),
       transition: Transition.noTransition,
     ),
-    GetPage(name: AppRoutes.kExpenseRoute, page:()=> ExpenseView(), binding: ExpenseBinding())
-    
+    GetPage(name: AppRoutes.kExpenseRoute, page:()=> ExpenseView(), binding: ExpenseBinding(),transition: Transition.noTransition),
+    GetPage(
+      name: AppRoutes.kStoreSelectionViewRoute,
+      page: () => StoreSelectionView(),
+      binding: StoreBinding(),
+      transition: Transition.noTransition,
+    ),
   ];
 }

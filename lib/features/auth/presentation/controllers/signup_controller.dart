@@ -108,13 +108,13 @@ class SignUpController extends GetxController {
       print('User Name: ${userEntity.name}');
       print('User Email: ${userEntity.email}');
 
-      Get.snackbar(
-        'Success',
-        'Welcome ${userEntity.name}!',
-        backgroundColor: AppColors.kPrimaryColor,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      // Get.snackbar(
+      //   'Success',
+      //   'Welcome ${userEntity.name}!',
+      //   backgroundColor: AppColors.kPrimaryColor,
+      //   colorText: Colors.white,
+      //   snackPosition: SnackPosition.BOTTOM,
+      // );
     } catch (e) {
       print(e);
       Get.snackbar(

@@ -14,6 +14,7 @@ class CustomTextField extends StatelessWidget {
   final Color hintColor;
   final FocusNode? focusNode; // keyboard focus k liye add kiya hai k enter krne bd khud aghe jai
   final void Function(String)? onFieldSubmitted; 
+  final  prefixIcon; 
 
   const CustomTextField({
     super.key,
@@ -30,6 +31,7 @@ class CustomTextField extends StatelessWidget {
     this.fillColor = const Color(0xFF353535),
     this.labelColor = Colors.white,
     this.hintColor = const Color(0xFF9E9E9E),
+    this.prefixIcon
   });
 
   @override

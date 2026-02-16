@@ -13,6 +13,8 @@ class ExpenseEntity {
   final String paymentMethod;
   final String status;
   final DateTime? orderDate;
+  final String? storeName;
+  final String? storeLocation;
 
   ExpenseEntity({
     required this.expenseId,
@@ -27,5 +29,7 @@ class ExpenseEntity {
     required this.paymentMethod,
     required this.status,
     this.orderDate,
+    this.storeName,
+    this.storeLocation,
   });
 }

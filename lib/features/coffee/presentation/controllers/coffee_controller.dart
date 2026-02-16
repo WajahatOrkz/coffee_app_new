@@ -7,6 +7,7 @@ import 'package:coffee_app/features/coffee/domain/entities/expense_entity.dart';
 import 'package:coffee_app/features/coffee/domain/entities/expense_item_entity.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/coffee_repository.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
+import 'package:coffee_app/features/coffee/presentation/controllers/store_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -216,11 +217,25 @@ class CoffeeController extends GetxController {
       );
       return;
     }
+    
     // 🔥 Check if cartId exists
     if (_currentCartId == null) {
       Get.snackbar(
         'Error',
         'Cart ID not found',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    // Check if store is selected
+    if (Get.isRegistered<StoreController>() && 
+        Get.find<StoreController>().selectedStore.value == null) {
+       Get.snackbar(
+        'Error',
+        'No store selected. Please restart the app or select a store.',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -256,6 +271,12 @@ class CoffeeController extends GetxController {
         paymentMethod: selectedPaymentMethod.value,
         status: 'completed',
         orderDate: DateTime.now(),
+        storeName: Get.isRegistered<StoreController>() 
+            ? Get.find<StoreController>().selectedStore.value?.name 
+            : null,
+        storeLocation: Get.isRegistered<StoreController>() 
+            ? Get.find<StoreController>().selectedStore.value?.address 
+            : null,
       );
 
       await firestoreRepository.saveExpense(expenseEntity);

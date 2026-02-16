@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_app/features/coffee/data/models/expense_model.dart';
+import 'package:coffee_app/features/coffee/data/models/store_model.dart';
 import 'package:coffee_app/features/coffee/domain/entities/coffee_entity.dart';
 import 'package:coffee_app/features/coffee/domain/entities/expense_entity.dart';
+import 'package:coffee_app/features/coffee/domain/entities/store_entity.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
 import '../models/cart_model.dart';
 
@@ -196,6 +198,40 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
     } catch (e) {
       print('❌ Error fetching expenses: $e');
       throw Exception('Failed to load expenses: $e');
+    }
+  }
+
+  @override
+  Future<List<StoreEntity>> getStores() async {
+    try {
+      final snapshot = await _firestore.collection('stores').get();
+      return snapshot.docs
+          .map((doc) => StoreModel.fromJson(doc.data(), doc.id).toEntity())
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to load stores: $e');
+    }
+  }
+
+  @override
+  Future<void> addStore(StoreEntity store) async {
+    try {
+      final storeModel = StoreModel(
+        id: store.id,
+        name: store.name,
+        address: store.address,
+      );
+      // If ID is empty, let Firestore generate it, effectively
+      if (store.id.isEmpty) {
+        await _firestore.collection('stores').add(storeModel.toJson());
+      } else {
+        await _firestore
+            .collection('stores')
+            .doc(store.id)
+            .set(storeModel.toJson());
+      }
+    } catch (e) {
+      throw Exception('Failed to add store: $e');
     }
   }
 }

@@ -84,6 +84,16 @@ class ExpenseView extends GetView<ExpenseController> {
                           fontSize: 12,
                         ),
                       ),
+                      if (expense.storeName != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          "Store: ${expense.storeName} (${expense.storeLocation ?? ''})",
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                       Text(
                         "Items: ${expense.totalItems} | Subtotal: \$${expense.subtotal.toStringAsFixed(2)}",
                         style: const TextStyle(

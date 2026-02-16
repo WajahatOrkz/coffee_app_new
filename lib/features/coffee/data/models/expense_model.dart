@@ -15,6 +15,8 @@ class ExpenseModel {
   final String paymentMethod;
   final String status;
   final DateTime? orderDate;
+  final String? storeName;
+  final String? storeLocation;
 
   ExpenseModel({
     required this.expenseId,
@@ -29,6 +31,8 @@ class ExpenseModel {
     required this.paymentMethod,
     required this.status,
     this.orderDate,
+    this.storeName,
+    this.storeLocation,
   });
 
   /// 🔹 JSON → Model
@@ -48,6 +52,8 @@ class ExpenseModel {
       paymentMethod: json['paymentMethod'],
       status: json['status'],
       orderDate: json['orderDate']?.toDate(),
+      storeName: json['storeName'],
+      storeLocation: json['storeLocation'],
     );
   }
 
@@ -65,6 +71,8 @@ class ExpenseModel {
       'paymentMethod': paymentMethod,
       'status': status,
       'orderDate': orderDate,
+      'storeName': storeName,
+      'storeLocation': storeLocation,
     };
   }
 
@@ -83,6 +91,8 @@ class ExpenseModel {
       paymentMethod: paymentMethod,
       status: status,
       orderDate: orderDate,
+      storeName: storeName,
+      storeLocation: storeLocation,
     );
   }
 
@@ -101,6 +111,8 @@ class ExpenseModel {
       paymentMethod: entity.paymentMethod,
       status: entity.status,
       orderDate: entity.orderDate,
+      storeName: entity.storeName,
+      storeLocation: entity.storeLocation,
     );
   }
 }
