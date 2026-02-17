@@ -93,6 +93,10 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
     try {
       final doc = await _firestore.collection('carts').doc(cartId).get();
 
+      if (!doc.exists || doc.data() == null) {
+        return CartEntity(items: [], quantities: {});
+      }
+
       final data = Map<String, dynamic>.from(doc.data()!);
       final cartModel = CartModel.fromMap(data);
 

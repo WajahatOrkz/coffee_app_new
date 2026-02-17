@@ -1,8 +1,6 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/core/validation/validations.dart';
 import 'package:coffee_app/features/auth/domain/repositories/auth_repository.dart';
-import 'package:coffee_app/routes/routes.dart';
-
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,6 +41,7 @@ class LoginController extends GetxController {
 
   //  login function yahan hai
   Future<void> login(GlobalKey<FormState> formKey) async {
+    Get.focusScope?.unfocus(); // Close keyboard to prevent FocusNode crash
     if (formKey.currentState!.validate()) {
       try {
         isLoading.value = true;
@@ -55,16 +54,13 @@ class LoginController extends GetxController {
         print('User Name: ${userEntity.name}');
         print('User Email: ${userEntity.email}');
 
-        Get.snackbar(
-          'Success',
-          'Welcome ${userEntity.name}!',
-          backgroundColor: AppColors.kPrimaryColor,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-        );
-
-        // Navigate to Store Selection
-        Get.offAllNamed(AppRoutes.kStoreSelectionViewRoute);
+        // Get.snackbar(
+        //   'Success',
+        //   'Welcome ${userEntity.name}!',
+        //   backgroundColor: AppColors.kPrimaryColor,
+        //   colorText: Colors.white,
+        //   snackPosition: SnackPosition.BOTTOM,
+        // );
       } catch (e) {
         Get.snackbar(
           'Login Failed',
@@ -91,16 +87,13 @@ class LoginController extends GetxController {
       print('User Name: ${userEntity.name}');
       print('User Email: ${userEntity.email}');
 
-      Get.snackbar(
-        'Success',
-        'Welcome ${userEntity.name}!',
-        backgroundColor: AppColors.kPrimaryColor,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
-
-      // Navigate to Store Selection
-      Get.offAllNamed(AppRoutes.kStoreSelectionViewRoute);
+      // Get.snackbar(
+      //   'Success',
+      //   'Welcome ${userEntity.name}!',
+      //   backgroundColor: AppColors.kPrimaryColor,
+      //   colorText: Colors.white,
+      //   snackPosition: SnackPosition.BOTTOM,
+      // );
     } catch (e) {
       print(e);
       Get.snackbar(

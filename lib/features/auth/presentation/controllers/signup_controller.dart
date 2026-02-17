@@ -56,6 +56,7 @@ class SignUpController extends GetxController {
   // }
 
   Future<void> register(GlobalKey<FormState> signUpFormKey) async {
+    Get.focusScope?.unfocus(); // Close keyboard to prevent FocusNode crash
     // Validate form
     if (!signUpFormKey.currentState!.validate()) {
       return;

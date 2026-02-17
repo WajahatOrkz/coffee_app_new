@@ -9,7 +9,7 @@ class ExpenseController extends GetxController {
 
   ExpenseController({required this.repository, required this.userId});
 
-  // UI update ke liye observable variables
+  
   var expenses = <ExpenseEntity>[].obs;
   var isLoading = false.obs;
 

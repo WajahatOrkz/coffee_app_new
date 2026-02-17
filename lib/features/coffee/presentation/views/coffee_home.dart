@@ -12,8 +12,6 @@ import '../widgets/coffee_card_shimmer.dart';
 class CoffeeHomeView extends GetView<CoffeeController> {
   @override
   Widget build(BuildContext context) {
-    LogoutController logoutController = Get.find<LogoutController>();
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -97,7 +95,7 @@ class CoffeeHomeView extends GetView<CoffeeController> {
             IconButton(
               onPressed: () async {
                 print("logout button is pressing");
-                await logoutController.logout();
+                await Get.find<LogoutController>().logout();
               },
               icon: Icon(Icons.logout, color: Colors.white, size: 20),
             ),
@@ -276,7 +274,7 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                 ],
               ),
               controller.isLoading.value ? CustomLoader() : SizedBox.shrink(),
-              if (logoutController.isLoading.value) CustomLoader(),
+              if (Get.find<LogoutController>().isLoading.value) CustomLoader(),
             ],
           ),
         ),
