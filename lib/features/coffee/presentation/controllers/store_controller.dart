@@ -1,13 +1,18 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/features/coffee/domain/entities/store_entity.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
+import 'package:coffee_app/features/coffee/domain/repositories/coffee_repository.dart'; // ✅ Import this
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class StoreController extends GetxController {
   final FirestoreRepository repository;
+  final CoffeeRepository coffeeRepository;
 
-  StoreController({required this.repository});
+  StoreController({
+    required this.repository,
+      required this.coffeeRepository,
+  });
 
   final stores = <StoreEntity>[].obs;
   final isLoading = false.obs;
@@ -27,7 +32,14 @@ class StoreController extends GetxController {
       print("store controller call ho raha hai??");
       isLoading.value = true;
       final loadedStores = await repository.getStores();
-      stores.value = loadedStores;
+      
+      if (loadedStores.isEmpty) {
+        print("No stores found. Seeding default data...");
+        await coffeeRepository.seedData();
+        stores.value = await repository.getStores();
+      } else {
+        stores.value = loadedStores;
+      }
     } catch (e) {
       Get.snackbar('Error', 'Failed to load stores: $e');
     } finally {
