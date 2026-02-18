@@ -1,4 +1,5 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
+import 'package:coffee_app/features/coffee/coffee_strings.dart';
 import 'package:coffee_app/features/coffee/presentation/controllers/map_picker_controller.dart';
 import 'package:coffee_app/features/auth/presentation/widgets/custom_loader.dart'; // ✅ Import CustomLoader
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class MapPickerScreen extends GetView<MapPickerController> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text(
-          "Pick Store Location",
+          CoffeeStrings.pickStoreLocation,
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.transparent,
@@ -23,7 +24,6 @@ class MapPickerScreen extends GetView<MapPickerController> {
       ),
       body: Stack(
         children: [
-          // ✅ Map hamesha render hoti rahe, kabhi conditionally remove mat karo
           GoogleMap(
             mapType: MapType.normal,
             initialCameraPosition: MapPickerController.kDefaultPosition,
@@ -31,23 +31,21 @@ class MapPickerScreen extends GetView<MapPickerController> {
             markers: Set<Marker>.from(controller.markers),
             onTap: controller.onMapTapped,
             myLocationEnabled: true,
+            buildingsEnabled: true,
+
             myLocationButtonEnabled: true,
           ),
 
-          // ✅ Loading spinner map ke upar overlay ke taur pe
           Obx(() {
             if (controller.isLoading.value) {
               return Container(
                 color: Colors.black,
-                child: const Center(
-                  child: CustomLoader(),
-                ),
+                child: const Center(child: CustomLoader()),
               );
             }
             return const SizedBox.shrink();
           }),
 
-          // ✅ Bottom address + button - sirf tab dikhao jab loading nahi ho
           Obx(() {
             if (controller.isLoading.value) return const SizedBox.shrink();
             return Positioned(
