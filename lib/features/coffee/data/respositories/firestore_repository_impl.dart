@@ -225,6 +225,8 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
         id: store.id,
         name: store.name,
         address: store.address,
+        latitude: store.latitude,
+        longitude: store.longitude,
       );
       // If ID is empty, let Firestore generate it, effectively
       if (store.id.isEmpty) {

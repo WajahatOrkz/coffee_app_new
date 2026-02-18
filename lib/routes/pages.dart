@@ -4,6 +4,8 @@ import 'package:coffee_app/features/coffee/presentation/bindings/coffee_binding.
 import 'package:coffee_app/features/coffee/presentation/bindings/expense_binding.dart';
 import 'package:coffee_app/features/coffee/presentation/bindings/store_binding.dart';
 import 'package:coffee_app/features/coffee/presentation/views/store_selection_view.dart';
+import 'package:coffee_app/features/coffee/presentation/views/map_picker_screen.dart'; // ✅ Import Screen
+import 'package:coffee_app/features/coffee/presentation/bindings/map_picker_binding.dart'; // ✅ Import Binding
 
 import 'package:coffee_app/features/coffee/presentation/views/cart.dart';
 import 'package:coffee_app/features/coffee/presentation/views/coffee_home.dart';
@@ -25,13 +27,13 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.kLoginRoute,
-      page: () =>  LoginView(),
+      page: () => LoginView(),
       binding: AuthBinding(),
       transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.kSignUpRoute,
-      page: () =>  SignUpView(),
+      page: () => SignUpView(),
       binding: AuthBinding(),
       transition: Transition.noTransition,
     ),
@@ -47,12 +49,23 @@ class AppPages {
       binding: CoffeeBinding(),
       transition: Transition.noTransition,
     ),
-    GetPage(name: AppRoutes.kExpenseRoute, page:()=> ExpenseView(), binding: ExpenseBinding(),transition: Transition.noTransition),
+    GetPage(
+      name: AppRoutes.kExpenseRoute,
+      page: () => ExpenseView(),
+      binding: ExpenseBinding(),
+      transition: Transition.noTransition,
+    ),
     GetPage(
       name: AppRoutes.kStoreSelectionViewRoute,
       page: () => StoreSelectionView(),
       binding: StoreBinding(),
       transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: AppRoutes.kMapPickerRoute,
+      page: () => const MapPickerScreen(),
+      binding: MapPickerBinding(),
+      transition: Transition.leftToRight,
     ),
   ];
 }

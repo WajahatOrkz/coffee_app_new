@@ -2,6 +2,7 @@ import 'package:coffee_app/core/constants/app_colors.dart';
 import 'package:coffee_app/features/coffee/domain/entities/store_entity.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/coffee_repository.dart'; // ✅ Import this
+import 'package:coffee_app/routes/routes.dart'; // ✅ Import Routes
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,10 +10,7 @@ class StoreController extends GetxController {
   final FirestoreRepository repository;
   final CoffeeRepository coffeeRepository;
 
-  StoreController({
-    required this.repository,
-      required this.coffeeRepository,
-  });
+  StoreController({required this.repository, required this.coffeeRepository});
 
   final stores = <StoreEntity>[].obs;
   final isLoading = false.obs;
@@ -32,7 +30,7 @@ class StoreController extends GetxController {
       print("store controller call ho raha hai??");
       isLoading.value = true;
       final loadedStores = await repository.getStores();
-      
+
       if (loadedStores.isEmpty) {
         print("No stores found. Seeding default data...");
         await coffeeRepository.seedData();
@@ -65,21 +63,25 @@ class StoreController extends GetxController {
         id: '', // Firestore will generate ID if we use add() logic or we can generate here
         name: nameController.text.trim(),
         address: addressController.text.trim(),
+        latitude: selectedLat.value,
+        longitude: selectedLng.value,
       );
 
       await repository.addStore(newStore);
 
       nameController.clear();
       addressController.clear();
+      selectedLat.value = null;
+      selectedLng.value = null;
       Get.back(); // Close dialog
 
       await loadStores();
-      Get.snackbar(
-        'Success',
-        'Store added successfully',
-        colorText: AppColors.kPrimaryColor,
-        backgroundColor: AppColors.kPrimaryColor,
-      );
+      // Get.snackbar(
+      //   'Success',
+      //   'Store added successfully',
+      //   colorText: AppColors.kPrimaryColor,
+      //   backgroundColor: AppColors.kPrimaryColor,
+      // );
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -89,6 +91,18 @@ class StoreController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  final selectedLat = Rxn<double>();
+  final selectedLng = Rxn<double>();
+
+  void pickLocation() async {
+    final result = await Get.toNamed(AppRoutes.kMapPickerRoute);
+    if (result != null && result is Map) {
+      addressController.text = result['address'];
+      selectedLat.value = result['lat'];
+      selectedLng.value = result['lng'];
     }
   }
 

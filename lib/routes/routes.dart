@@ -6,6 +6,7 @@ class AppRoutes{
   static const kCartRoute="/cart";
   static const kExpenseRoute="/expense";
   static const kStoreSelectionViewRoute="/storeselectionview";
+  static const kMapPickerRoute="/map_picker";
 
   
 }

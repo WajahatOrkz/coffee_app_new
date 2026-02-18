@@ -1,4 +1,5 @@
 import 'package:coffee_app/core/constants/app_colors.dart';
+import 'package:coffee_app/features/auth/presentation/widgets/custom_loader.dart'; // ✅ Import CustomLoader
 
 import 'package:coffee_app/features/coffee/presentation/controllers/store_controller.dart';
 import 'package:coffee_app/routes/routes.dart';
@@ -29,7 +30,7 @@ class StoreSelectionView extends GetView<StoreController> {
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(
-            child: CircularProgressIndicator(color: AppColors.kPrimaryColor),
+            child: CustomLoader(), // ✅ Use CustomLoader
           );
         }
 

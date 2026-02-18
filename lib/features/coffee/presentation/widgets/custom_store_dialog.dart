@@ -36,8 +36,12 @@ class showAddStoreDialog extends GetView<StoreController> {
             CustomTextField(
               controller: controller.addressController,
               hintText: 'Store Location',
-              label: "store name",
-              prefixIcon: Icons.location_on,
+              label: "Store Location",
+
+              suffixIcon: IconButton(
+                icon: Icon(Icons.location_on, color: Colors.blue),
+                onPressed: () => controller.pickLocation(),
+              ),
             ),
             SizedBox(height: 24),
             CustomButton(
