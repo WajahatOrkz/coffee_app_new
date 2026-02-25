@@ -75,7 +75,7 @@ class MapPickerScreen extends GetView<MapPickerController> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
+                  ElevatedButton.icon(
                     onPressed: controller.confirmSelection,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.kPrimaryColor,
@@ -84,7 +84,8 @@ class MapPickerScreen extends GetView<MapPickerController> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
+                    icon: const Icon(Icons.location_on, color: Colors.white),
+                    label: const Text(
                       "Confirm Location",
                       style: TextStyle(
                         color: Colors.white,

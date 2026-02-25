@@ -69,8 +69,8 @@ class LoginView extends GetView<LoginController> {
                               'Welcome to\nCoffeeMart login now!',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
                             ),
