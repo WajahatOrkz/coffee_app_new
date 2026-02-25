@@ -1,6 +1,6 @@
 // lib/features/coffee/presentation/views/expense_view.dart
 
-import 'package:coffee_app/core/constants/app_colors.dart';
+import 'package:coffee_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/expense_controller.dart';

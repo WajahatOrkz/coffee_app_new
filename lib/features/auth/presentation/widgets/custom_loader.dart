@@ -1,4 +1,4 @@
-import 'package:coffee_app/core/constants/app_colors.dart';
+import 'package:coffee_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 

@@ -1,4 +1,4 @@
-import 'package:coffee_app/core/constants/app_colors.dart';
+import 'package:coffee_app/core/theme/app_colors.dart';
 import 'package:coffee_app/core/validation/validations.dart';
 import 'package:coffee_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:flutter/material.dart';
