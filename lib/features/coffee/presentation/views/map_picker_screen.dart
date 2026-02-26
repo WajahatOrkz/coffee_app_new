@@ -57,21 +57,38 @@ class MapPickerScreen extends GetView<MapPickerController> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     decoration: BoxDecoration(
                       color: Colors.black87,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(color: Colors.white24),
-                    ),
-                    child: Obx(
-                      () => Text(
-                        controller.address.value,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.location_on_outlined, color: Colors.white70, size: 20),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Obx(
+                            () => Text(
+                              controller.address.value,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -80,11 +97,12 @@ class MapPickerScreen extends GetView<MapPickerController> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.kPrimaryColor,
                       padding: const EdgeInsets.symmetric(vertical: 16),
+                      elevation: 4,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    icon: const Icon(Icons.location_on, color: Colors.white),
+                    icon: const Icon(Icons.check_circle_outline, color: Colors.white),
                     label: const Text(
                       "Confirm Location",
                       style: TextStyle(

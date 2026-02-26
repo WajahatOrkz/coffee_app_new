@@ -59,9 +59,15 @@ class ExpenseView extends GetView<ExpenseController> {
 
               return Card(
                 color: AppColors.cardBackground,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ExpansionTile(
-                  
+                  shape: const Border(),
+                  collapsedShape: const Border(),
+                  tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   title: Text(
                     "Total: \$${expense.totalPrice.toStringAsFixed(2)}",
                     style: const TextStyle(
