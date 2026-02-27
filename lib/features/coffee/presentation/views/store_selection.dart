@@ -74,7 +74,7 @@ class StoreSelectionView extends GetView<StoreController> {
                 ),
                 onTap: () {
                   controller.selectStore(store);
-                  Get.toNamed(AppRoutes.kHomeCoffeeRoute);
+                  Get.toNamed(AppRoutes.kMainRoute);
                 },
               ),
             );

@@ -1,11 +1,16 @@
 import 'package:coffee_app/features/auth/presentation/bindings/auth_binding.dart';
 import 'package:coffee_app/features/auth/presentation/bindings/splash.dart';
+import 'package:coffee_app/features/chat/presentation/bindings/chat_binding.dart';
+import 'package:get/get.dart';
+import 'package:coffee_app/features/chat/presentation/views/chat.dart';
+import 'package:coffee_app/features/main/presentation/bindings/main_binding.dart';
+import 'package:coffee_app/features/main/presentation/views/main_screen.dart';
 import 'package:coffee_app/features/coffee/presentation/bindings/coffee_binding.dart';
 import 'package:coffee_app/features/coffee/presentation/bindings/expense_binding.dart';
 import 'package:coffee_app/features/coffee/presentation/bindings/store_binding.dart';
-import 'package:coffee_app/features/coffee/presentation/views/store_selection_view.dart';
-import 'package:coffee_app/features/coffee/presentation/views/map_picker_screen.dart'; // ✅ Import Screen
-import 'package:coffee_app/features/coffee/presentation/bindings/map_picker_binding.dart'; // ✅ Import Binding
+import 'package:coffee_app/features/coffee/presentation/views/store_selection.dart';
+import 'package:coffee_app/features/coffee/presentation/views/map_picker.dart';
+import 'package:coffee_app/features/coffee/presentation/bindings/map_picker_binding.dart';
 
 import 'package:coffee_app/features/coffee/presentation/views/cart.dart';
 import 'package:coffee_app/features/coffee/presentation/views/coffee_home.dart';
@@ -66,6 +71,23 @@ class AppPages {
       page: () => const MapPickerScreen(),
       binding: MapPickerBinding(),
       transition: Transition.leftToRight,
+    ),
+    GetPage(
+      name: AppRoutes.kChatRoute,
+      page: () => ChatScreen(),
+      binding: BindingsBuilder(() {
+        ChatBinding(
+          chatId: Get.arguments['chatId'],
+          currentUserId: Get.arguments['currentUserId'],
+        ).dependencies();
+      }),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: AppRoutes.kMainRoute,
+      page: () => MainScreen(),
+      binding: MainBinding(),
+      transition: Transition.noTransition,
     ),
   ];
 }

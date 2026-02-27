@@ -7,6 +7,8 @@ class AppRoutes{
   static const kExpenseRoute="/expense";
   static const kStoreSelectionViewRoute="/storeselectionview";
   static const kMapPickerRoute="/map_picker";
+  static const kChatRoute="/chat";
+  static const kMainRoute="/main";
 
   
 }
