@@ -8,6 +8,7 @@ import 'package:coffee_app/features/coffee/domain/entities/expense_item_entity.d
 import 'package:coffee_app/features/coffee/domain/repositories/coffee_repository.dart';
 import 'package:coffee_app/features/coffee/domain/repositories/firestore_repository.dart';
 import 'package:coffee_app/features/coffee/presentation/controllers/store_controller.dart';
+import 'package:coffee_app/core/services/push_notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -49,7 +50,7 @@ class CoffeeController extends GetxController {
     // Seed data on init (checking if needed inside the repo)
     _seedAndLoad();
     _initializeCart();
-    
+
     // Listen to store changes
     if (Get.isRegistered<StoreController>()) {
       ever(Get.find<StoreController>().selectedStore, (_) {
@@ -61,7 +62,7 @@ class CoffeeController extends GetxController {
   Future<void> _seedAndLoad() async {
     try {
       await coffeeRepository.seedData();
-      
+
       // ✅ Refresh stores in StoreController if they were just seeded
       if (Get.isRegistered<StoreController>()) {
         await Get.find<StoreController>().loadStores();
@@ -239,7 +240,7 @@ class CoffeeController extends GetxController {
       );
       return;
     }
-    
+
     // 🔥 Check if cartId exists
     if (_currentCartId == null) {
       Get.snackbar(
@@ -253,9 +254,9 @@ class CoffeeController extends GetxController {
     }
 
     // Check if store is selected
-    if (Get.isRegistered<StoreController>() && 
+    if (Get.isRegistered<StoreController>() &&
         Get.find<StoreController>().selectedStore.value == null) {
-       Get.snackbar(
+      Get.snackbar(
         'Error',
         'No store selected. Please restart the app or select a store.',
         snackPosition: SnackPosition.BOTTOM,
@@ -293,11 +294,11 @@ class CoffeeController extends GetxController {
         paymentMethod: selectedPaymentMethod.value,
         status: 'completed',
         orderDate: DateTime.now(),
-        storeName: Get.isRegistered<StoreController>() 
-            ? Get.find<StoreController>().selectedStore.value?.name 
+        storeName: Get.isRegistered<StoreController>()
+            ? Get.find<StoreController>().selectedStore.value?.name
             : null,
-        storeLocation: Get.isRegistered<StoreController>() 
-            ? Get.find<StoreController>().selectedStore.value?.address 
+        storeLocation: Get.isRegistered<StoreController>()
+            ? Get.find<StoreController>().selectedStore.value?.address
             : null,
       );
 
@@ -309,11 +310,21 @@ class CoffeeController extends GetxController {
       cartItems.clear();
       cartQuantities.clear();
       selectedPaymentMethod.value = '';
-      _currentCartId = null;
 
       Get.back();
 
       Get.log('✅ Order confirmed and saved to expenses');
+
+      // 🔥 Trigger Local Notification
+      try {
+        final pushService = Get.find<PushNotificationService>();
+        await pushService.showLocalNotification(
+          "Order Confirmation",
+          "Your order for ${expenseEntity.totalItems} items has been successfully placed!",
+        );
+      } catch (e) {
+        Get.log('❌ Could not show local notification: $e');
+      }
     } catch (e) {
       Get.log('❌ Error confirming order: $e');
       Get.snackbar(
@@ -363,7 +374,7 @@ class CoffeeController extends GetxController {
       if (Get.isRegistered<StoreController>()) {
         storeId = Get.find<StoreController>().selectedStore.value?.id;
       }
-      
+
       final list = await coffeeRepository.getCoffeeList(storeId: storeId);
       allCoffeeList.value = list;
       searchedCoffeeList.value = list;
