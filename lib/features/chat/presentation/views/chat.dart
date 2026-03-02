@@ -9,18 +9,25 @@ class ChatScreen extends GetView<ChatController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: AppColors.background,
         leading: GestureDetector(
           onTap: () {
             Get.back();
           },
-          child: Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          child: const Icon(Icons.arrow_back_ios_new, color: AppColors.textPrimary, size: 20),
         ),
         title: Text(
           Get.arguments?['contactName'] ?? "Chat",
-          style: TextStyle(color: AppColors.textPrimary),
+          style: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        backgroundColor: AppColors.background,
+        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -28,41 +35,86 @@ class ChatScreen extends GetView<ChatController> {
             child: Obx(() {
               return ListView.builder(
                 reverse: true,
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 itemCount: controller.messages.length,
                 itemBuilder: (context, index) {
                   final message = controller.messages[index];
                   bool isMe = message.senderId == controller.currentUserId;
                   return Align(
-                    alignment: isMe
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
+                    alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
                     child: Container(
-                      padding: EdgeInsets.all(10),
-                      margin: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: isMe ? Colors.blue : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(12),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      margin: EdgeInsets.only(
+                        top: 4,
+                        bottom: 4,
+                        left: isMe ? 60 : 16,
+                        right: isMe ? 16 : 60,
                       ),
-                      child: Text(message.text),
+                      decoration: BoxDecoration(
+                        color: isMe ? AppColors.kPrimaryColor : AppColors.cardBackground,
+                        borderRadius: BorderRadius.only(
+                          topLeft: const Radius.circular(16),
+                          topRight: const Radius.circular(16),
+                          bottomLeft: Radius.circular(isMe ? 16 : 4),
+                          bottomRight: Radius.circular(isMe ? 4 : 16),
+                        ),
+                      ),
+                      child: Text(
+                        message.text,
+                        style: TextStyle(
+                          color: isMe ? Colors.white : AppColors.textPrimary,
+                          fontSize: 15,
+                        ),
+                      ),
                     ),
                   );
                 },
               );
             }),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          Container(
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24, top: 12),
+            decoration: const BoxDecoration(
+              color: AppColors.background,
+              border: Border(
+                top: BorderSide(color: AppColors.cardBackground, width: 1),
+              ),
+            ),
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: controller.textController,
-                    decoration: InputDecoration(hintText: 'Type a message...'),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.cardBackground,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: TextField(
+                      controller: controller.textController,
+                      style: const TextStyle(color: AppColors.textPrimary),
+                      decoration: const InputDecoration(
+                        hintText: 'Type a message...',
+                        hintStyle: TextStyle(color: AppColors.textSecondary),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                      ),
+                    ),
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: controller.sendMessage,
+                const SizedBox(width: 12),
+                GestureDetector(
+                  onTap: controller.sendMessage,
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: const BoxDecoration(
+                      color: AppColors.kPrimaryColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.send_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
                 ),
               ],
             ),
