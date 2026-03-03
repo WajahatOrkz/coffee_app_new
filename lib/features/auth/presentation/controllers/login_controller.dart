@@ -64,8 +64,6 @@ class LoginController extends GetxController {
         print('Full User Entity: $userEntity');
         print('User Name: ${userEntity.name}');
         print('User Email: ${userEntity.email}');
-
-       
       } catch (e) {
         Get.snackbar(
           'Login Failed',
@@ -91,8 +89,6 @@ class LoginController extends GetxController {
       print('Google Sign-In Successful');
       print('User Name: ${userEntity.name}');
       print('User Email: ${userEntity.email}');
-
-  
     } catch (e) {
       print(e);
       Get.snackbar(
