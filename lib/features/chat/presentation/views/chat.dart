@@ -35,8 +35,8 @@ class ChatScreen extends GetView<ChatController> {
           onTap: () => Get.back(),
           child: Row(
             children: [
-              const Icon(Icons.arrow_back_ios_new,
-                  color: AppColors.textPrimary, size: 20),
+              const Icon(Icons.arrow_back_rounded,
+                  color: AppColors.textPrimary, size: 22),
               const SizedBox(width: 4),
               Hero(
                 tag: 'avatar_$contactName',
@@ -82,11 +82,11 @@ class ChatScreen extends GetView<ChatController> {
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.videocam_rounded, color: AppColors.textPrimary),
+          icon: const Icon(Icons.video_call_rounded, color: AppColors.textPrimary),
           onPressed: () {},
         ),
         IconButton(
-          icon: const Icon(Icons.call_rounded, color: AppColors.textPrimary),
+          icon: const Icon(Icons.phone_in_talk_rounded, color: AppColors.textPrimary),
           onPressed: () {},
         ),
         const SizedBox(width: 8),
@@ -207,9 +207,9 @@ class ChatScreen extends GetView<ChatController> {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.add_rounded,
+                  Icons.attach_file_rounded,
                   color: AppColors.textSecondary,
-                  size: 24,
+                  size: 22,
                 ),
               ),
             ),
@@ -242,7 +242,7 @@ class ChatScreen extends GetView<ChatController> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.camera_alt_outlined,
+                          icon: const Icon(Icons.photo_camera_rounded,
                               color: AppColors.textSecondary),
                           onPressed: () {},
                         ),
@@ -270,10 +270,13 @@ class ChatScreen extends GetView<ChatController> {
                   ),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.send_rounded,
-                  color: Colors.white,
-                  size: 22,
+                child: const Padding(
+                  padding: EdgeInsets.only(left: 4.0),
+                  child: Icon(
+                    Icons.send,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                 ),
               ),
             ),
