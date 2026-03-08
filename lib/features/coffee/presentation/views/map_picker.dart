@@ -5,6 +5,8 @@ import 'package:coffee_app/features/coffee/presentation/controllers/map_picker_c
 import 'package:coffee_app/features/auth/presentation/widgets/custom_loader.dart'; // ✅ Import CustomLoader
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:ui';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapPickerScreen extends GetView<MapPickerController> {
@@ -14,10 +16,23 @@ class MapPickerScreen extends GetView<MapPickerController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text(
           CoffeeStrings.pickStoreLocation,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black.withOpacity(0.7),
+                Colors.transparent,
+              ],
+            ),
+          ),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -56,39 +71,38 @@ class MapPickerScreen extends GetView<MapPickerController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.black87,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        decoration: BoxDecoration(
+                          color: AppColors.cardBackground.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.white24),
                         ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.location_on_outlined, color: Colors.white70, size: 20),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Obx(
-                            () => Text(
-                              controller.address.value,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.location_on_outlined, color: Colors.white70, size: 20),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Obx(
+                                () => Text(
+                                  controller.address.value,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -97,10 +111,9 @@ class MapPickerScreen extends GetView<MapPickerController> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.kPrimaryColor,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
+                      elevation: 8,
+                      shadowColor: AppColors.kPrimaryColor.withOpacity(0.5),
+                      shape: const StadiumBorder(),
                     ),
                     icon: const Icon(Icons.check_circle_outline, color: Colors.white),
                     label: const Text(
@@ -109,6 +122,7 @@ class MapPickerScreen extends GetView<MapPickerController> {
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        letterSpacing: 1.1,
                       ),
                     ),
                   ),
