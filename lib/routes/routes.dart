@@ -1,14 +1,12 @@
-class AppRoutes{
-  static const kSplashRoute="/splash";
-  static const kSignUpRoute="/signin";
-   static const kLoginRoute="/login";
-  static const kHomeCoffeeRoute="/coffee_home";
-  static const kCartRoute="/cart";
-  static const kExpenseRoute="/expense";
-  static const kStoreSelectionViewRoute="/storeselectionview";
-  static const kMapPickerRoute="/map_picker";
-  static const kChatRoute="/chat";
-  static const kMainRoute="/main";
-
-  
+class AppRoutes {
+  static const kSplashRoute = "/splash";
+  static const kSignUpRoute = "/signin";
+  static const kLoginRoute = "/login";
+  static const kHomeCoffeeRoute = "/coffee_home";
+  static const kCartRoute = "/cart";
+  static const kExpenseRoute = "/expense";
+  static const kStoreSelectionViewRoute = "/storeselectionview";
+  static const kMapPickerRoute = "/map_picker";
+  static const kChatRoute = "/chat";
+  static const kMainRoute = "/main";
 }
