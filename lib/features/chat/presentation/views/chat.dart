@@ -28,65 +28,95 @@ class ChatScreen extends GetView<ChatController> {
     return AppBar(
       elevation: 0,
       backgroundColor: AppColors.background,
+      shape: Border(
+        bottom: BorderSide(
+          color: AppColors.kPrimaryColor.withOpacity(0.1),
+          width: 1,
+        ),
+      ),
       leadingWidth: 70,
       leading: Padding(
-        padding: const EdgeInsets.only(left: 8.0),
-        child: GestureDetector(
-          onTap: () => Get.back(),
-          child: Row(
-            children: [
-              const Icon(Icons.arrow_back_rounded,
-                  color: AppColors.textPrimary, size: 22),
-              const SizedBox(width: 4),
-              Hero(
-                tag: 'avatar_$contactName',
-                child: CircleAvatar(
-                  radius: 18,
-                  backgroundColor: AppColors.cardBackground,
-                  child: Text(
-                    contactName.isNotEmpty
-                        ? contactName[0].toUpperCase()
-                        : 'C',
-                    style: const TextStyle(
-                      color: AppColors.kPrimaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+        padding: const EdgeInsets.only(left: 12.0),
+        child: Center(
+          child: GestureDetector(
+            onTap: () => Get.back(),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground,
+                shape: BoxShape.circle,
               ),
-            ],
+              child: const Icon(Icons.chevron_left_rounded,
+                  color: AppColors.textPrimary, size: 20),
+            ),
           ),
         ),
       ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      title: Row(
         children: [
-          Text(
-            contactName,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+          Hero(
+            tag: 'avatar_$contactName',
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.kPrimaryColor, width: 1.5),
+              ),
+              child: CircleAvatar(
+                radius: 16,
+                backgroundColor: AppColors.cardBackground,
+                child: Text(
+                  contactName.isNotEmpty ? contactName[0].toUpperCase() : 'C',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: 2),
-          Text(
-            "Online",
-            style: TextStyle(
-              color: AppColors.kPrimaryColor.withOpacity(0.9),
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-            ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                contactName,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Row(
+                children: [
+                  Container(
+                    width: 6,
+                    height: 6,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF4CAF50),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Text(
+                    "Online",
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.video_call_rounded, color: AppColors.textPrimary),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.phone_in_talk_rounded, color: AppColors.textPrimary),
+          icon: const Icon(Icons.more_vert_rounded, color: AppColors.textSecondary),
           onPressed: () {},
         ),
         const SizedBox(width: 8),
@@ -122,23 +152,26 @@ class ChatScreen extends GetView<ChatController> {
                     padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
                     decoration: BoxDecoration(
                       gradient: isMe
-                          ? const LinearGradient(
-                              colors: [Color(0xFFE4864D), AppColors.kPrimaryColor],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
+                          ? LinearGradient(
+                              colors: [
+                                AppColors.kPrimaryColor,
+                                AppColors.kPrimaryColor.withOpacity(0.8),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
                             )
                           : null,
                       color: isMe ? null : AppColors.cardBackground,
                       borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(20),
-                        topRight: const Radius.circular(20),
-                        bottomLeft: Radius.circular(isMe ? 20 : 4),
-                        bottomRight: Radius.circular(isMe ? 4 : 20),
+                        topLeft: const Radius.circular(24),
+                        topRight: const Radius.circular(24),
+                        bottomLeft: Radius.circular(isMe ? 24 : 8),
+                        bottomRight: Radius.circular(isMe ? 8 : 24),
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 8,
+                          color: Colors.black.withOpacity(0.15),
+                          blurRadius: 10,
                           offset: const Offset(0, 4),
                         )
                       ],
@@ -184,72 +217,61 @@ class ChatScreen extends GetView<ChatController> {
 
   Widget _buildMessageInput() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
       decoration: BoxDecoration(
         color: AppColors.background,
-        border: Border(
-          top: BorderSide(
-            color: AppColors.cardBackground.withOpacity(0.5),
-            width: 1,
-          ),
-        ),
       ),
       child: SafeArea(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: const BoxDecoration(
-                  color: AppColors.cardBackground,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.attach_file_rounded,
-                  color: AppColors.textSecondary,
-                  size: 22,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
             Expanded(
               child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
                   color: AppColors.cardBackground,
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
-                    color: AppColors.kPrimaryColor.withOpacity(0.2),
-                    width: 1,
-                  ),
-                ),
-                child: TextField(
-                  controller: controller.textController,
-                  maxLines: 4,
-                  minLines: 1,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 15,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Type a message...',
-                    hintStyle: const TextStyle(color: AppColors.textSecondary),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 14),
-                    suffixIcon: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.photo_camera_rounded,
-                              color: AppColors.textSecondary),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(width: 4),
-                      ],
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
                     ),
-                  ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.add_circle_outline_rounded,
+                          color: AppColors.kPrimaryColor, size: 24),
+                      onPressed: () {},
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: controller.textController,
+                        maxLines: 4,
+                        minLines: 1,
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 14,
+                        ),
+                        decoration: const InputDecoration(
+                          hintText: 'Share your thoughts...',
+                          hintStyle: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 14,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 12),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.mood_rounded,
+                          color: AppColors.textSecondary, size: 22),
+                      onPressed: () {},
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -261,22 +283,22 @@ class ChatScreen extends GetView<ChatController> {
                 }
               },
               child: Container(
-                padding: const EdgeInsets.all(14),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFFE4864D), AppColors.kPrimaryColor],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.kPrimaryColor,
                   shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.kPrimaryColor.withOpacity(0.4),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.only(left: 4.0),
-                  child: Icon(
-                    Icons.send,
-                    color: Colors.white,
-                    size: 20,
-                  ),
+                child: const Icon(
+                  Icons.send_rounded,
+                  color: Colors.white,
+                  size: 20,
                 ),
               ),
             ),
