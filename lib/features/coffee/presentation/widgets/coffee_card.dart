@@ -53,11 +53,11 @@ class CoffeeCard extends GetView<CoffeeController> {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.star, color: AppColors.kPrimaryColor, size: 14),
+                      Icon(Icons.star, color: AppColors.kPrimaryColor, size: 12),
                       SizedBox(width: 4),
                       Text(
                         coffeeData.rating.toString(),
-                        style: TextStyle(color: Colors.white, fontSize: 12),
+                        style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -76,8 +76,8 @@ class CoffeeCard extends GetView<CoffeeController> {
                   coffeeData.name,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -87,7 +87,7 @@ class CoffeeCard extends GetView<CoffeeController> {
                   coffeeData.subtitle,
                   style: TextStyle(
                     color: Colors.grey,
-                    fontSize: 12,
+                    fontSize: 11,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -100,14 +100,14 @@ class CoffeeCard extends GetView<CoffeeController> {
                       '\$${coffeeData.price.toStringAsFixed(2)}',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     GestureDetector(
                       onTap: () => controller.addToCart(coffeeData),
                       child: Container(
-                        padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(6),
                         decoration: BoxDecoration(
                           color: AppColors.kPrimaryColor,
                           borderRadius: BorderRadius.circular(8),
@@ -115,7 +115,7 @@ class CoffeeCard extends GetView<CoffeeController> {
                         child: Icon(
                           Icons.add,
                           color: Colors.white,
-                          size: 20,
+                          size: 18,
                         ),
                       ),
                     ),

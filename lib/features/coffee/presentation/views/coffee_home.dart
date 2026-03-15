@@ -37,7 +37,7 @@ class CoffeeHomeView extends GetView<CoffeeController> {
               onPressed: () {
                 Get.toNamed(AppRoutes.kExpenseRoute);
               },
-              icon: Icon(Icons.history, size: 20, color: AppColors.white),
+              icon: Icon(Icons.notifications_none, size: 22, color: AppColors.white),
             ),
 
             // Cart Icon with Badge
@@ -46,9 +46,9 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                 children: [
                   IconButton(
                     icon: Icon(
-                      Icons.shopping_cart_outlined,
+                      Icons.shopping_bag_outlined,
                       color: Colors.white,
-                      size: 20,
+                      size: 22,
                     ),
                     onPressed: () {
                       // Navigate to Cart Screen
@@ -90,14 +90,14 @@ class CoffeeHomeView extends GetView<CoffeeController> {
                 ],
               );
             }),
-            SizedBox(width: 10),
+            SizedBox(width: 5),
 
             IconButton(
               onPressed: () async {
                 print("logout button is pressing");
                 await Get.find<LogoutController>().logout();
               },
-              icon: Icon(Icons.logout, color: Colors.white, size: 20),
+              icon: Icon(Icons.logout_outlined, color: Colors.white, size: 20),
             ),
 
             SizedBox(width: 10),
